@@ -2,42 +2,30 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Contact & Explore | Rofi Arasyi</title>
+  <title>Contact | Badai</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="portfolio.html">Portfolio</a>
-      <a href="contact.html" class="active">Contact & Explore</a>
-    </nav>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="portfolio.html">Works & Bounties</a>
+    <a href="contact.html" class="active">Contact</a>
+  </nav>
 
-    <main class="grid-2">
-      <!-- Rute Eksplisit: Akses langsung untuk profesional -->
-      <div class="card">
-        <h2>Direktori Kontak</h2>
-        <p>Akses langsung profil profesional dan sosial media saya:</p>
-        <ul style="list-style: none; margin-top: 15px; line-height: 2;">
-          <li>💼 <strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/rofi-arasyi" target="_blank" style="color:var(--accent);">Rofi Arasyi</a></li>
-          <li>📸 <strong>Instagram:</strong> <a href="https://instagram.com/rofiarasyi" target="_blank" style="color:var(--accent);">@rofiarasyi</a></li>
-          <li>🐙 <strong>GitHub:</strong> <a href="https://github.com/badaihackerone-pixel" target="_blank" style="color:var(--accent);">badaihackerone-pixel</a></li>
-          <li>📧 <strong>Email:</strong> badaihackerone@gmail.com</li>
-        </ul>
+  <div class="container" style="max-width: 600px;">
+    <h1 style="text-align: center; margin-bottom: 30px;">Koneksi Protokol</h1>
+    
+    <div class="glass-panel" style="text-align: center;">
+      <p style="margin-bottom: 30px;">Inisiasi komunikasi untuk kolaborasi teknis, diskusi keamanan, atau arsitektur sistem visual.</p>
+      
+      <div style="display: flex; flex-direction: column; gap: 15px;">
+        <a href="mailto:badaihackerone@gmail.com" style="display:block; padding:15px; background:rgba(0, 243, 255, 0.1); border:1px solid var(--neon-cyan); color:#fff; text-decoration:none; border-radius:8px;">📧 badaihackerone@gmail.com</a>
+        <a href="https://github.com/badaihackerone-pixel" target="_blank" style="display:block; padding:15px; background:rgba(255, 255, 255, 0.05); border:1px solid var(--glass-border); color:#fff; text-decoration:none; border-radius:8px;">🐙 GitHub Repository</a>
+        <a href="https://instagram.com/rofiarasyi" target="_blank" style="display:block; padding:15px; background:rgba(255, 255, 255, 0.05); border:1px solid var(--glass-border); color:#fff; text-decoration:none; border-radius:8px;">📸 Instagram Identity</a>
+        <a href="https://www.linkedin.com/in/rofi-arasyi" target="_blank" style="display:block; padding:15px; background:rgba(255, 255, 255, 0.05); border:1px solid var(--glass-border); color:#fff; text-decoration:none; border-radius:8px;">💼 LinkedIn Network</a>
       </div>
-
-      <!-- Rute Implisit: Game Interaktif (Easter Egg) -->
-      <div class="card">
-        <h2>Interactive: System Explorer</h2>
-        <p style="font-size: 0.9rem;">Navigasikan kursor (titik biru) ke ikon target untuk mengekstraksi data tautan.</p>
-        
-        <div id="game-container">
-          <div id="rpg-board"></div>
-          <div id="game-message">Gunakan <strong>W, A, S, D</strong> atau <strong>Arrow Keys</strong> untuk menjelajah grid.</div>
-        </div>
-      </div>
-    </main>
+    </div>
   </div>
   <script src="script.js"></script>
 </body>

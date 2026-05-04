@@ -2,38 +2,37 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About | Portfolio</title>
+  <title>About | Badai</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="about.html" class="active">About</a>
+    <a href="portfolio.html">Works & Bounties</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+
   <div class="container">
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="about.html" class="active">About</a>
-      <a href="portfolio.html">Portfolio</a>
-      <a href="contact.html">Contact & Game</a>
-    </nav>
-
-    <main>
-      <h1 style="text-align: center; margin-bottom: 40px;">Tentang Saya</h1>
-      
-      <div class="grid-2">
-        <div class="card">
-          <h2>⚡ Teknik Elektro</h2>
-          <!-- GANTI LINK GAMBAR DI BAWAH INI -->
-          <img src="https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=500&h=200&fit=crop" alt="Electrical" style="width:100%; border-radius:8px; margin-bottom:15px;">
-          <p>Mendalami pemecahan masalah logis, interaksi perangkat keras tingkat rendah, analisis sirkuit, dan arsitektur sistem. Pemahaman mendasar ini mendukung logika saya dalam memahami keamanan perangkat lunak dan arsitektur jaringan.</p>
-        </div>
-
-        <div class="card">
-          <h2>🎨 MEDFO HMTE</h2>
-          <!-- GANTI LINK GAMBAR DI BAWAH INI -->
-          <img src="https://images.unsplash.com/photo-1542744094-24638ea0b3b5?w=500&h=200&fit=crop" alt="Media" style="width:100%; border-radius:8px; margin-bottom:15px;">
-          <p>Sebagai Staff Media dan Informasi (MEDFO) di Himpunan Mahasiswa Teknik Elektro. Bertanggung jawab atas desain visual, komunikasi publik, dan penyampaian informasi yang modern dan terstruktur.</p>
-        </div>
+    <h1 style="text-align: center; margin-bottom: 40px;">Arsitektur Identitas</h1>
+    
+    <div class="grid-2">
+      <div class="glass-panel">
+        <h2 style="color: var(--neon-cyan);">⚡ Teknik Elektro</h2>
+        <p>Pendekatan teknis saya dibangun di atas fondasi analisis sirkuit dan logika sistem digital. Memahami bagaimana elektron mengalir di level *hardware* memberikan presisi saat saya membongkar anomali di level aplikasi jaringan.</p>
       </div>
-    </main>
+
+      <div class="glass-panel">
+        <h2 style="color: var(--neon-purple);">🛡️ Security Research</h2>
+        <p>Fokus pada identifikasi *Business Logic Errors*, kebocoran otorisasi (BOLA), dan cacat asinkron (*Race Conditions*) dalam arsitektur terdistribusi dan infrastruktur *multi-tenant* berskala besar.</p>
+      </div>
+    </div>
+
+    <div class="glass-panel" style="text-align: center; margin-top: -10px;">
+      <h2 style="color: #fff;">🎨 Media & Informasi (HMTE)</h2>
+      <p style="max-width: 700px; margin: 0 auto;">Sebagai representasi visual himpunan, saya menerjemahkan data mentah dan kampanye informasi ke dalam hierarki visual yang dapat dicerna, membuktikan bahwa logika teknis dapat berjalan beriringan dengan estetika desain.</p>
+    </div>
   </div>
+  <script src="script.js"></script>
 </body>
 </html>

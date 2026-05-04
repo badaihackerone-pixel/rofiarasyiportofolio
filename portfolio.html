@@ -2,63 +2,73 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Portfolio | Rofi Arasyi</title>
+  <title>Works | Badai</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="portfolio.html" class="active">Works & Bounties</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+
   <div class="container">
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="portfolio.html" class="active">Portfolio</a>
-      <a href="contact.html">Contact & Explore</a>
-    </nav>
-
-    <main>
-      <h2>Visual Architecture: MEDFO HMTE</h2>
-      <p>Kompilasi log desain terpublikasi untuk kampanye media HMTE.</p>
+    
+    <!-- BUG BOUNTY SECTION -->
+    <div style="margin-bottom: 60px;">
+      <h1>Security Research <span style="color:var(--text-dim); font-size:1rem;">/ Vulnerability Logs</span></h1>
       
-      <!-- Tautan langsung ke postingan karya -->
-      <div class="grid-2" style="margin-bottom: 40px;">
-        <div class="card" style="text-align: center;">
-          <h3 style="margin-bottom: 10px;">Postingan Alpha</h3>
-          <a href="https://www.instagram.com/p/DXqywCLEk7b/" target="_blank" class="btn" style="font-size: 0.9rem;">Akses Log Instagram 1</a>
-        </div>
-        <div class="card" style="text-align: center;">
-          <h3 style="margin-bottom: 10px;">Postingan Beta</h3>
-          <a href="https://www.instagram.com/p/DW34wLymD07/" target="_blank" class="btn" style="font-size: 0.9rem;">Akses Log Instagram 2</a>
-        </div>
-        <div class="card" style="text-align: center;">
-          <h3 style="margin-bottom: 10px;">Postingan Gamma</h3>
-          <a href="https://www.instagram.com/p/DWyXcHfmLI4/" target="_blank" class="btn" style="font-size: 0.9rem;">Akses Log Instagram 3</a>
-        </div>
-        <div class="card" style="text-align: center;">
-          <h3 style="margin-bottom: 10px;">Postingan Delta</h3>
-          <a href="https://www.instagram.com/p/DV3Cp7Ckm78/" target="_blank" class="btn" style="font-size: 0.9rem;">Akses Log Instagram 4</a>
+      <div class="glass-panel">
+        <h3 style="color: var(--bug-critical);">[P1] Authorization Bypass in SQL Data Explorer</h3>
+        <p style="margin-bottom: 10px;">Mengizinkan akses ke infrastruktur & metadata lintas-penyewa (Other Tenants').</p>
+        <div style="display: flex; gap: 15px; align-items: center; font-size: 0.9rem;">
+          <span style="color: var(--text-dim);">Target: Unity Technologies</span>
+          <span style="color: var(--text-dim);">Bounty: $3,000</span>
+          <span class="badge unresolved">Unresolved</span>
         </div>
       </div>
 
-      <h2>Security Vulnerability Reports</h2>
-      <p>Log eksploitasi dan validasi *Bug Bounty*.</p>
-
-      <div class="card" style="border-left: 4px solid var(--danger);">
-        <h3>[P1] Authorization Bypass in SQL Data Explorer</h3>
-        <p style="margin: 8px 0;"><strong>Target:</strong> Unity Technologies | <strong>Reward:</strong> $3,000</p>
-        <span class="badge bg-danger">Unresolved</span>
+      <div class="glass-panel">
+        <h3 style="color: #00ff80;">[P2] Production Managed Identity Exposure via IMDS</h3>
+        <p style="margin-bottom: 10px;">Eksposur identitas terkelola di dalam infrastruktur *pipeline* multi-tenant.</p>
+        <div style="display: flex; gap: 15px; align-items: center; font-size: 0.9rem;">
+          <span style="color: var(--text-dim);">Target: Unity Technologies</span>
+          <span style="color: var(--text-dim);">Bounty: $1,200</span>
+          <span class="badge resolved">Resolved</span>
+        </div>
       </div>
 
-      <div class="card" style="border-left: 4px solid var(--success);">
-        <h3>[P2] Production Managed Identity Exposure via IMDS</h3>
-        <p style="margin: 8px 0;"><strong>Target:</strong> Unity Technologies | <strong>Reward:</strong> $1,200</p>
-        <span class="badge bg-success">Resolved</span>
+      <div class="glass-panel">
+        <h3 style="color: var(--bug-high);">[P4] Critical Data Integrity: Race Condition</h3>
+        <p style="margin-bottom: 10px;">Menyebabkan "Storage Collision" yang memicu *Cross-Repository Data Leakage* & *Zombie Resources*.</p>
+        <div style="display: flex; gap: 15px; align-items: center; font-size: 0.9rem;">
+          <span style="color: var(--text-dim);">Target: Unity Technologies</span>
+          <span style="color: var(--text-dim);">Bounty: $150</span>
+          <span class="badge unresolved">Unresolved</span>
+        </div>
       </div>
+    </div>
 
-      <div class="card" style="border-left: 4px solid var(--danger);">
-        <h3>[P4] Race Condition causes "Storage Collision"</h3>
-        <p style="margin: 8px 0;"><strong>Target:</strong> Unity Technologies | <strong>Reward:</strong> $150</p>
-        <span class="badge bg-danger">Unresolved</span>
-      </div>
-    </main>
+    <!-- INSTAGRAM EMBED SECTION -->
+    <h1>HMTE Design Works <span style="color:var(--text-dim); font-size:1rem;">/ Live Previews</span></h1>
+    <p style="margin-bottom: 30px;">Catatan: Render postingan bergantung pada skrip pihak ketiga (Instagram). Jika tidak termuat, nonaktifkan pelindung pelacakan browser Anda.</p>
+
+    <div class="grid-instagram">
+      <!-- Embed Post 1 -->
+      <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DXqywCLEk7b/" data-instgrm-version="14" style="background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:400px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);"></blockquote>
+      
+      <!-- Embed Post 2 -->
+      <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DW34wLymD07/" data-instgrm-version="14" style="background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:400px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);"></blockquote>
+
+      <!-- Embed Post 3 -->
+      <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DWyXcHfmLI4/" data-instgrm-version="14" style="background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:400px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);"></blockquote>
+
+      <!-- Embed Post 4 -->
+      <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DV3Cp7Ckm78/" data-instgrm-version="14" style="background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:400px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);"></blockquote>
+    </div>
+
   </div>
+  <script src="script.js"></script>
 </body>
 </html>
