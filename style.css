@@ -1,102 +1,98 @@
 :root {
-  --bg-color: #050510;
-  --glass-bg: rgba(20, 20, 35, 0.4);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --text-main: #e2e8f0;
-  --text-dim: #94a3b8;
-  --neon-cyan: #00f3ff;
-  --neon-purple: #bc13fe;
-  --bug-critical: #ff003c;
-  --bug-high: #ff8800;
+  --bg: #000000;
+  --fg: #ffffff;
+  --font-mono: 'Courier New', Courier, monospace;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', 'Segoe UI', sans-serif; }
+* { box-sizing: border-box; margin: 0; padding: 0; cursor: none; /* Menyembunyikan kursor asli */ }
 
 body {
-  background-color: var(--bg-color);
-  background-image: 
-    radial-gradient(circle at 15% 50%, rgba(0, 243, 255, 0.08), transparent 25%),
-    radial-gradient(circle at 85% 30%, rgba(188, 19, 254, 0.08), transparent 25%);
-  color: var(--text-main);
-  line-height: 1.6;
-  min-height: 100vh;
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-mono);
+  line-height: 1.5;
   overflow-x: hidden;
+  text-transform: uppercase;
 }
 
-.container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+/* Custom Inversion Cursor */
+#custom-cursor {
+  position: fixed;
+  top: 0; left: 0;
+  width: 40px; height: 40px;
+  background-color: var(--fg);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: difference;
+  transition: width 0.2s, height 0.2s;
+}
 
-/* Glassmorphism Navigation */
+.container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+
+/* Stark Navigation */
 nav {
   display: flex;
-  justify-content: center;
-  gap: 40px;
-  padding: 20px;
-  margin-bottom: 50px;
-  background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--glass-border);
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--fg);
+  padding-bottom: 20px;
+  margin-bottom: 60px;
 }
 
 nav a {
-  color: var(--text-dim);
+  color: var(--fg);
   text-decoration: none;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  font-size: 0.9rem;
-  transition: 0.3s ease;
+  font-weight: bold;
+  font-size: 1.2rem;
 }
 
 nav a:hover, nav a.active {
-  color: var(--neon-cyan);
-  text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+  background-color: var(--fg);
+  color: var(--bg);
 }
 
-/* Glass Cards */
-.glass-panel {
-  background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  padding: 30px;
-  margin-bottom: 30px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s ease, border-color 0.3s ease;
+/* Typography & Structural Elements */
+h1 { font-size: 4rem; letter-spacing: -2px; line-height: 1; margin-bottom: 20px; border: 4px solid var(--fg); padding: 20px; display: inline-block; }
+h2 { font-size: 2rem; border-bottom: 1px solid var(--fg); padding-bottom: 10px; margin-bottom: 30px; margin-top: 50px; }
+
+p { font-size: 1.1rem; margin-bottom: 20px; max-width: 800px; }
+
+/* The Redacted Effect */
+.redacted {
+  background-color: var(--fg);
+  color: var(--fg); /* Teks disembunyikan dalam background */
+  padding: 0 5px;
+  transition: color 0.3s;
 }
+.redacted:hover { color: var(--bg); /* Terungkap saat di-hover */ }
 
-.glass-panel:hover {
-  border-color: rgba(0, 243, 255, 0.3);
-  transform: translateY(-2px);
-}
-
-h1, h2, h3 { color: #fff; margin-bottom: 15px; }
-h1 span { color: var(--neon-cyan); text-shadow: 0 0 15px rgba(0, 243, 255, 0.4); }
-
-/* Layout Grids */
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-.grid-instagram { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; justify-items: center; }
-
-/* Status Badges */
-.badge { display: inline-block; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; letter-spacing: 0.5px; }
-.badge.unresolved { background: rgba(255, 0, 60, 0.15); color: var(--bug-critical); border: 1px solid var(--bug-critical); }
-.badge.resolved { background: rgba(0, 255, 128, 0.15); color: #00ff80; border: 1px solid #00ff80; }
-
-/* Glitch Effect */
-.glitch { position: relative; display: inline-block; }
-.glitch::before, .glitch::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0;
-  left: 0;
+/* Marquee / Kinetic Text */
+.marquee-container {
   width: 100%;
-  height: 100%;
-  background: var(--bg-color);
+  overflow: hidden;
+  white-space: nowrap;
+  border-top: 1px solid var(--fg);
+  border-bottom: 1px solid var(--fg);
+  padding: 10px 0;
+  margin: 40px 0;
 }
-.glitch::before { left: 2px; text-shadow: -1px 0 var(--bug-critical); clip: rect(24px, 550px, 90px, 0); animation: glitch-anim-2 3s infinite linear alternate-reverse; }
-.glitch::after { left: -2px; text-shadow: -1px 0 var(--neon-cyan); clip: rect(85px, 550px, 140px, 0); animation: glitch-anim 2.5s infinite linear alternate-reverse; }
+.marquee { display: inline-block; animation: scroll 15s linear infinite; font-size: 1.5rem; font-weight: bold; }
+@keyframes scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-@keyframes glitch-anim { 0% { clip: rect(10px, 9999px, 86px, 0); } 100% { clip: rect(42px, 9999px, 13px, 0); } }
-@keyframes glitch-anim-2 { 0% { clip: rect(65px, 9999px, 100px, 0); } 100% { clip: rect(12px, 9999px, 98px, 0); } }
+/* Grids & Cards */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+.wireframe-box { border: 1px solid var(--fg); padding: 30px; position: relative; }
+.wireframe-box::before { content: '[DATA_BLOCK]'; position: absolute; top: -12px; left: 10px; background: var(--bg); padding: 0 5px; font-size: 0.8rem; }
+
+/* Link styling */
+.brutal-link { display: inline-block; border: 2px solid var(--fg); color: var(--fg); text-decoration: none; padding: 15px 30px; font-weight: bold; font-size: 1.2rem; transition: 0.2s; }
+.brutal-link:hover { background: var(--fg); color: var(--bg); }
+
+/* Bug Log Tables */
+table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+th, td { border: 1px solid var(--fg); padding: 15px; text-align: left; }
+th { background: var(--fg); color: var(--bg); }
+
+/* IG Grid */
+.ig-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
