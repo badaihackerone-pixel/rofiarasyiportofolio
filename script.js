@@ -1,56 +1,87 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Typing Effect for headers
-  const typeTarget = document.querySelector('.typewriter');
-  if (typeTarget) {
-    const text = typeTarget.getAttribute('data-text');
-    typeTarget.textContent = '';
-    let i = 0;
-    const typeInterval = setInterval(() => {
-      if (i < text.length) {
-        typeTarget.textContent += text.charAt(i);
-        i++;
-      } else {
-        clearInterval(typeInterval);
-      }
-    }, 50);
+  const gameBoard = document.getElementById('game-board');
+  if (!gameBoard) return; // Hanya berjalan di halaman contact/game
+
+  const scoreDisplay = document.getElementById('score');
+  const timeDisplay = document.getElementById('time');
+  const startBtn = document.getElementById('start-btn');
+  
+  let score = 0;
+  let timeLeft = 20; // Waktu permainan 20 detik
+  let gameInterval;
+  let bugInterval;
+  let isPlaying = false;
+
+  startBtn.addEventListener('click', startGame);
+
+  function startGame() {
+    if (isPlaying) return;
+    isPlaying = true;
+    score = 0;
+    timeLeft = 20;
+    scoreDisplay.textContent = score;
+    timeDisplay.textContent = timeLeft;
+    gameBoard.innerHTML = '';
+    startBtn.style.display = 'none';
+
+    gameInterval = setInterval(updateTime, 1000);
+    spawnBug(); // Mulai memunculkan bug
   }
 
-  // Terminal Mini-Game Logic (Contact Page)
-  const terminalInput = document.getElementById('cmd-input');
-  const terminalOutput = document.getElementById('terminal-output');
-
-  if (terminalInput) {
-    terminalInput.addEventListener('keypress', function (e) {
-      if (e.key === 'Enter') {
-        const cmd = this.value.trim().toLowerCase();
-        this.value = '';
-        executeCommand(cmd);
-      }
-    });
-  }
-
-  function executeCommand(cmd) {
-    const response = document.createElement('div');
-    response.innerHTML = `> ${cmd}<br>`;
-    
-    switch(cmd) {
-      case 'help':
-        response.innerHTML += `Available commands: [whoami, sudo get-contact, clear]`;
-        break;
-      case 'whoami':
-        response.innerHTML += `guest_user`;
-        break;
-      case 'sudo get-contact':
-        response.innerHTML += `ACCESS GRANTED.<br>Email: admin@bountyhunter.local<br>GitHub: github.com/yourusername`;
-        response.style.color = '#fff';
-        break;
-      case 'clear':
-        terminalOutput.innerHTML = '';
-        return;
-      default:
-        response.innerHTML += `Command not found. Type 'help' for options.`;
+  function updateTime() {
+    timeLeft--;
+    timeDisplay.textContent = timeLeft;
+    if (timeLeft <= 0) {
+      endGame();
     }
-    terminalOutput.appendChild(response);
-    document.getElementById('terminal').scrollTop = document.getElementById('terminal').scrollHeight;
+  }
+
+  function spawnBug() {
+    if (!isPlaying) return;
+
+    const bug = document.createElement('div');
+    bug.classList.add('bug');
+    bug.textContent = '🐛'; // Ikon bug
+
+    // Hitung posisi acak di dalam game-board
+    const maxX = gameBoard.clientWidth - 40;
+    const maxY = gameBoard.clientHeight - 40;
+    const randomX = Math.floor(Math.random() * maxX);
+    const randomY = Math.floor(Math.random() * maxY);
+
+    bug.style.left = `${randomX}px`;
+    bug.style.top = `${randomY}px`;
+
+    // Event listener untuk menangkap bug
+    bug.addEventListener('mousedown', function() {
+      score++;
+      scoreDisplay.textContent = score;
+      this.remove();
+    });
+
+    gameBoard.appendChild(bug);
+
+    // Bug menghilang sendiri setelah 800ms jika tidak diklik
+    setTimeout(() => {
+      if (gameBoard.contains(bug)) {
+        bug.remove();
+      }
+    }, 800);
+
+    // Waktu acak untuk kemunculan bug berikutnya (300ms - 800ms)
+    const nextSpawn = Math.floor(Math.random() * 500) + 300;
+    bugInterval = setTimeout(spawnBug, nextSpawn);
+  }
+
+  function endGame() {
+    isPlaying = false;
+    clearInterval(gameInterval);
+    clearTimeout(bugInterval);
+    gameBoard.innerHTML = `<div style="display:flex; height:100%; align-items:center; justify-content:center; flex-direction:column;">
+      <h2 style="margin:0;">Time's Up!</h2>
+      <p style="margin:5px 0;">Bugs Caught: ${score}</p>
+    </div>`;
+    startBtn.textContent = 'Play Again';
+    startBtn.style.display = 'inline-block';
   }
 });

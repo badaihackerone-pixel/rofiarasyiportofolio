@@ -2,27 +2,50 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>ssh contact@server | Contact</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact & Game | Portfolio</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
     <nav>
-      <a href="index.html">[0] Home</a>
-      <a href="about.html">[1] About</a>
-      <a href="portfolio.html">[2] Portfolio</a>
-      <a href="contact.html">[3] Contact</a>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="contact.html" class="active">Contact & Game</a>
     </nav>
+
     <main>
-      <h2>> SECURE TERMINAL</h2>
-      <p>Retrieve contact information by bypassing the terminal lock.</p>
-      
-      <div id="terminal">
-        <div id="terminal-output">System locked. Enter command to proceed. Try 'help'.<br></div>
-        <span>$ </span><input type="text" id="cmd-input" autocomplete="off" autofocus>
+      <div class="grid-2">
+        <div class="card">
+          <h2>Hubungi Saya</h2>
+          <p>Tertarik untuk mendiskusikan keamanan aplikasi web, proyek desain, atau arsitektur sistem elektro?</p>
+          <ul style="list-style: none; margin-top: 20px;">
+            <li style="margin-bottom: 10px;">📧 <strong>Email:</strong> badai@example.com</li>
+            <li style="margin-bottom: 10px;">🐙 <strong>GitHub:</strong> github.com/username</li>
+            <li style="margin-bottom: 10px;">📸 <strong>Instagram:</strong> @username</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h2>Interactive: Bug Hunter</h2>
+          <p>Tangkap (klik) 🐛 sebanyak mungkin sebelum waktu habis!</p>
+          
+          <div class="game-stats">
+            <span>Score: <span id="score">0</span></span>
+            <span>Time: <span id="time">20</span>s</span>
+          </div>
+
+          <div id="game-board">
+            <!-- Bug akan dirender di sini via JavaScript -->
+          </div>
+
+          <button id="start-btn" class="btn" style="width: 100%;">Mulai Berburu</button>
+        </div>
       </div>
     </main>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>

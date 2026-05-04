@@ -2,60 +2,59 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>cat /var/log/bounties | Portfolio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio | Portfolio</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
     <nav>
-      <a href="index.html">[0] Home</a>
-      <a href="about.html">[1] About</a>
-      <a href="portfolio.html">[2] Portfolio</a>
-      <a href="contact.html">[3] Contact</a>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="portfolio.html" class="active">Portfolio</a>
+      <a href="contact.html">Contact & Game</a>
     </nav>
+
     <main>
-      <h2>> ls -la /bug_bounty_reports</h2>
+      <h1>Desain Grafis - HMTE Instagram</h1>
+      <p>Kompilasi desain publikasi visual untuk Himpunan Mahasiswa Teknik Elektro.</p>
       
-      <div class="card bug-p1">
+      <div class="ig-grid" style="margin-bottom: 50px;">
+        <!-- Tautan ke IG Anda dengan gambar placeholder. Ganti src dengan gambar desain Anda sendiri -->
+        <a href="https://www.instagram.com/p/DXqywCLEk7b/" target="_blank" class="ig-post">
+          <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?w=300&h=300&fit=crop" alt="IG Post 1">
+        </a>
+        <a href="https://www.instagram.com/p/DW34wLymD07/" target="_blank" class="ig-post">
+          <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=300&h=300&fit=crop" alt="IG Post 2">
+        </a>
+        <a href="https://www.instagram.com/p/DWyXcHfmLI4/" target="_blank" class="ig-post">
+          <img src="https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=300&h=300&fit=crop" alt="IG Post 3">
+        </a>
+        <a href="https://www.instagram.com/p/DV3Cp7Ckm78/" target="_blank" class="ig-post">
+          <img src="https://images.unsplash.com/photo-1616469829581-73993eb86b02?w=300&h=300&fit=crop" alt="IG Post 4">
+        </a>
+      </div>
+
+      <h1>Security Research (Bug Bounty)</h1>
+      <p>Laporan kerentanan valid yang diakui oleh program keamanan perusahaan.</p>
+
+      <div class="card">
         <h3>[P1] Authorization Bypass in SQL Data Explorer</h3>
-        <p><strong>Target:</strong> Unity Technologies | <strong>Bounty:</strong> $3,000</p>
-        <p><strong>Status:</strong> <span class="status-unresolved">Unresolved</span></p>
-        <p>Allowed access to other tenants' metadata & infrastructure.</p>
+        <p style="margin: 10px 0;"><strong>Target:</strong> Unity Technologies | <strong>Reward:</strong> $3,000</p>
+        <span class="badge bg-danger">Unresolved</span>
       </div>
 
-      <div class="card bug-p2">
+      <div class="card">
         <h3>[P2] Production Managed Identity Exposure via IMDS</h3>
-        <p><strong>Target:</strong> Unity Technologies | <strong>Bounty:</strong> $1,200</p>
-        <p><strong>Status:</strong> <span class="status-resolved">Resolved</span></p>
-        <p>Exposed Managed Identity in Multi-Tenant Pipeline Infrastructure.</p>
+        <p style="margin: 10px 0;"><strong>Target:</strong> Unity Technologies | <strong>Reward:</strong> $1,200</p>
+        <span class="badge bg-success">Resolved</span>
       </div>
 
-      <div class="card bug-p4">
+      <div class="card">
         <h3>[P4] Race Condition causes "Storage Collision"</h3>
-        <p><strong>Target:</strong> Unity Technologies | <strong>Bounty:</strong> $150</p>
-        <p><strong>Status:</strong> <span class="status-unresolved">Unresolved</span></p>
-        <p>Critical Data Integrity flaw leading to Cross-Repository Data Leakage & Zombie Resources.</p>
+        <p style="margin: 10px 0;"><strong>Target:</strong> Unity Technologies | <strong>Reward:</strong> $150</p>
+        <span class="badge bg-danger">Unresolved</span>
       </div>
-
-      <div class="card bug-p3">
-        <h3>[P3] Business Logic Errors - Bypass Character Limit</h3>
-        <p><strong>Target:</strong> Glassdoor Security Program</p>
-        <p><strong>Status:</strong> Informational</p>
-      </div>
-
-      <div class="card bug-p5">
-        <h3>[P5] Reliance on Deprecated "VM2" Sandbox Library</h3>
-        <p><strong>Target:</strong> Unity Technologies</p>
-        <p><strong>Status:</strong> Informational</p>
-      </div>
-
-      <h2>> ls -la /hmte_designs</h2>
-      <ul>
-        <li><a href="https://www.instagram.com/p/DXqywCLEk7b/" target="_blank">Design Post 1</a></li>
-        <li><a href="https://www.instagram.com/p/DW34wLymD07/" target="_blank">Design Post 2</a></li>
-        <li><a href="https://www.instagram.com/p/DWyXcHfmLI4/" target="_blank">Design Post 3</a></li>
-        <li><a href="https://www.instagram.com/p/DV3Cp7Ckm78/" target="_blank">Design Post 4</a></li>
-      </ul>
     </main>
   </div>
 </body>

@@ -1,75 +1,172 @@
 :root {
-  --bg-color: #0a0a0a;
-  --text-primary: #00ff00;
-  --text-secondary: #aaaaaa;
-  --accent: #ff003c;
-  --font-mono: 'Courier New', Courier, monospace;
+  --bg-dark: #0f172a;
+  --bg-card: #1e293b;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --accent: #3b82f6;
+  --accent-hover: #60a5fa;
+  --danger: #ef4444;
+  --success: #10b981;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
 
 body {
-  background-color: var(--bg-color);
-  color: var(--text-primary);
-  font-family: var(--font-mono);
+  background-color: var(--bg-dark);
+  color: var(--text-main);
   line-height: 1.6;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
   padding: 20px;
 }
 
+/* Navigation */
 nav {
   display: flex;
-  gap: 20px;
-  border-bottom: 1px solid var(--text-primary);
-  padding-bottom: 10px;
-  margin-bottom: 30px;
+  justify-content: center;
+  gap: 30px;
+  padding: 20px 0;
+  border-bottom: 1px solid #334155;
+  margin-bottom: 40px;
 }
 
 nav a {
-  color: var(--text-primary);
+  color: var(--text-muted);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: color 0.3s ease;
+}
+
+nav a:hover, nav a.active {
+  color: var(--accent);
+}
+
+/* Typography & General Elements */
+h1, h2 {
+  color: var(--text-main);
+  margin-bottom: 15px;
+}
+
+p {
+  color: var(--text-muted);
+  margin-bottom: 15px;
+}
+
+.btn {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
   text-decoration: none;
   font-weight: bold;
-  text-transform: uppercase;
-}
-
-nav a:hover { color: var(--accent); }
-
-h1, h2 { color: #fff; margin-bottom: 15px; text-transform: uppercase; }
-
-.container { max-width: 900px; margin: 0 auto; }
-
-.card {
-  border: 1px solid var(--text-secondary);
-  padding: 15px;
-  margin-bottom: 15px;
-  transition: 0.3s;
-}
-
-.card:hover { border-color: var(--text-primary); }
-
-.bug-p1 { border-left: 5px solid #ff0000; }
-.bug-p2 { border-left: 5px solid #ff8800; }
-.bug-p3 { border-left: 5px solid #ffff00; }
-.bug-p4 { border-left: 5px solid #0088ff; }
-.bug-p5 { border-left: 5px solid #aaaaaa; }
-
-.status-unresolved { color: #ff0000; font-weight: bold; }
-.status-resolved { color: #00ff00; font-weight: bold; }
-
-/* Terminal Game UI */
-#terminal {
-  background: #000;
-  border: 1px solid var(--text-primary);
-  padding: 20px;
-  height: 300px;
-  overflow-y: auto;
-}
-
-#cmd-input {
-  background: transparent;
+  transition: background 0.3s;
   border: none;
-  color: var(--text-primary);
-  font-family: var(--font-mono);
-  font-size: 16px;
-  width: 80%;
-  outline: none;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: var(--accent-hover);
+}
+
+/* Cards & Layouts */
+.card {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 25px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #334155;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* Images */
+.profile-img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--accent);
+  margin-bottom: 20px;
+}
+
+.ig-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.ig-post img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  transition: opacity 0.3s;
+}
+
+.ig-post:hover img {
+  opacity: 0.8;
+}
+
+/* Bug Status */
+.badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+.bg-danger { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+.bg-success { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+
+/* Game UI */
+#game-board {
+  width: 100%;
+  height: 300px;
+  background: #0f172a;
+  border: 2px dashed var(--accent);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  margin: 20px 0;
+  cursor: crosshair;
+}
+
+.bug {
+  font-size: 30px;
+  position: absolute;
+  cursor: pointer;
+  user-select: none;
+  animation: pop 0.2s ease-out;
+}
+
+@keyframes pop {
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+
+.game-stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.2rem;
+  font-weight: bold;
 }
