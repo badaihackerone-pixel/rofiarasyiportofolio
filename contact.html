@@ -2,8 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact & Game | Portfolio</title>
+  <title>Contact & Explore | Rofi Arasyi</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,40 +11,34 @@
       <a href="index.html">Home</a>
       <a href="about.html">About</a>
       <a href="portfolio.html">Portfolio</a>
-      <a href="contact.html" class="active">Contact & Game</a>
+      <a href="contact.html" class="active">Contact & Explore</a>
     </nav>
 
-    <main>
-      <div class="grid-2">
-        <div class="card">
-          <h2>Hubungi Saya</h2>
-          <p>Tertarik untuk mendiskusikan keamanan aplikasi web, proyek desain, atau arsitektur sistem elektro?</p>
-          <ul style="list-style: none; margin-top: 20px;">
-            <li style="margin-bottom: 10px;">📧 <strong>Email:</strong> badai@example.com</li>
-            <li style="margin-bottom: 10px;">🐙 <strong>GitHub:</strong> github.com/username</li>
-            <li style="margin-bottom: 10px;">📸 <strong>Instagram:</strong> @username</li>
-          </ul>
-        </div>
+    <main class="grid-2">
+      <!-- Rute Eksplisit: Akses langsung untuk profesional -->
+      <div class="card">
+        <h2>Direktori Kontak</h2>
+        <p>Akses langsung profil profesional dan sosial media saya:</p>
+        <ul style="list-style: none; margin-top: 15px; line-height: 2;">
+          <li>💼 <strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/rofi-arasyi" target="_blank" style="color:var(--accent);">Rofi Arasyi</a></li>
+          <li>📸 <strong>Instagram:</strong> <a href="https://instagram.com/rofiarasyi" target="_blank" style="color:var(--accent);">@rofiarasyi</a></li>
+          <li>🐙 <strong>GitHub:</strong> <a href="https://github.com/badaihackerone-pixel" target="_blank" style="color:var(--accent);">badaihackerone-pixel</a></li>
+          <li>📧 <strong>Email:</strong> badaihackerone@gmail.com</li>
+        </ul>
+      </div>
 
-        <div class="card">
-          <h2>Interactive: Bug Hunter</h2>
-          <p>Tangkap (klik) 🐛 sebanyak mungkin sebelum waktu habis!</p>
-          
-          <div class="game-stats">
-            <span>Score: <span id="score">0</span></span>
-            <span>Time: <span id="time">20</span>s</span>
-          </div>
-
-          <div id="game-board">
-            <!-- Bug akan dirender di sini via JavaScript -->
-          </div>
-
-          <button id="start-btn" class="btn" style="width: 100%;">Mulai Berburu</button>
+      <!-- Rute Implisit: Game Interaktif (Easter Egg) -->
+      <div class="card">
+        <h2>Interactive: System Explorer</h2>
+        <p style="font-size: 0.9rem;">Navigasikan kursor (titik biru) ke ikon target untuk mengekstraksi data tautan.</p>
+        
+        <div id="game-container">
+          <div id="rpg-board"></div>
+          <div id="game-message">Gunakan <strong>W, A, S, D</strong> atau <strong>Arrow Keys</strong> untuk menjelajah grid.</div>
         </div>
       </div>
     </main>
   </div>
-
   <script src="script.js"></script>
 </body>
 </html>
