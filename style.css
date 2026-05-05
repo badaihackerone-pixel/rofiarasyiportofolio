@@ -1,98 +1,93 @@
-:root {
-  --bg: #000000;
-  --fg: #ffffff;
-  --font-mono: 'Courier New', Courier, monospace;
+/* portofolio */
+.text-portofolio {
+    color: black;
+    font-size: 75px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+    word-wrap: break-word;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; cursor: none; /* Menyembunyikan kursor asli */ }
-
-body {
-  background-color: var(--bg);
-  color: var(--fg);
-  font-family: var(--font-mono);
-  line-height: 1.5;
-  overflow-x: hidden;
-  text-transform: uppercase;
+/* ROFI ARASYI */
+.text-nama-utama {
+    color: black;
+    font-size: 120px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    word-wrap: break-word;
 }
 
-/* Custom Inversion Cursor */
-#custom-cursor {
-  position: fixed;
-  top: 0; left: 0;
-  width: 40px; height: 40px;
-  background-color: var(--fg);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  mix-blend-mode: difference;
-  transition: width 0.2s, height 0.2s;
+/* Dibuat untuk tugas mata pelajaran Pemrograman 2 */
+.text-tugas {
+    color: black;
+    font-size: 29.30px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 300;
+    line-height: 29.30px;
+    word-wrap: break-word;
 }
 
-.container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
-
-/* Stark Navigation */
-nav {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 2px solid var(--fg);
-  padding-bottom: 20px;
-  margin-bottom: 60px;
+/* Halo! Saya adalah mahasiswa Teknik Elektro UNPAD... */
+.text-bio {
+    color: white;
+    font-size: 29.30px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 300;
+    line-height: 29.30px;
+    letter-spacing: 1.46px;
+    word-wrap: break-word;
 }
 
-nav a {
-  color: var(--fg);
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 1.2rem;
+/* ROFI ARASYI<br/> */
+.text-nama-sekunder {
+    color: white;
+    font-size: 18.31px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    line-height: 18.31px;
+    letter-spacing: 0.92px;
+    word-wrap: break-word;
 }
 
-nav a:hover, nav a.active {
-  background-color: var(--fg);
-  color: var(--bg);
+/* 140910250067<br/> */
+.text-npm {
+    color: white;
+    font-size: 18.31px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 300;
+    line-height: 18.31px;
+    letter-spacing: 0.92px;
+    word-wrap: break-word;
 }
 
-/* Typography & Structural Elements */
-h1 { font-size: 4rem; letter-spacing: -2px; line-height: 1; margin-bottom: 20px; border: 4px solid var(--fg); padding: 20px; display: inline-block; }
-h2 { font-size: 2rem; border-bottom: 1px solid var(--fg); padding-bottom: 10px; margin-bottom: 30px; margin-top: 50px; }
-
-p { font-size: 1.1rem; margin-bottom: 20px; max-width: 800px; }
-
-/* The Redacted Effect */
-.redacted {
-  background-color: var(--fg);
-  color: var(--fg); /* Teks disembunyikan dalam background */
-  padding: 0 5px;
-  transition: color 0.3s;
+/* JAKARTA */
+.text-kota {
+    color: white;
+    font-size: 18.31px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 500;
+    line-height: 18.31px;
+    letter-spacing: 0.92px;
+    word-wrap: break-word;
 }
-.redacted:hover { color: var(--bg); /* Terungkap saat di-hover */ }
 
-/* Marquee / Kinetic Text */
-.marquee-container {
-  width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-  border-top: 1px solid var(--fg);
-  border-bottom: 1px solid var(--fg);
-  padding: 10px 0;
-  margin: 40px 0;
+/* , 08 JANUARI 2007<br/> */
+.text-tanggal {
+    color: white;
+    font-size: 18.31px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 300;
+    line-height: 18.31px;
+    letter-spacing: 0.92px;
+    word-wrap: break-word;
 }
-.marquee { display: inline-block; animation: scroll 15s linear infinite; font-size: 1.5rem; font-weight: bold; }
-@keyframes scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-/* Grids & Cards */
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-.wireframe-box { border: 1px solid var(--fg); padding: 30px; position: relative; }
-.wireframe-box::before { content: '[DATA_BLOCK]'; position: absolute; top: -12px; left: 10px; background: var(--bg); padding: 0 5px; font-size: 0.8rem; }
-
-/* Link styling */
-.brutal-link { display: inline-block; border: 2px solid var(--fg); color: var(--fg); text-decoration: none; padding: 15px 30px; font-weight: bold; font-size: 1.2rem; transition: 0.2s; }
-.brutal-link:hover { background: var(--fg); color: var(--bg); }
-
-/* Bug Log Tables */
-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
-th, td { border: 1px solid var(--fg); padding: 15px; text-align: left; }
-th { background: var(--fg); color: var(--bg); }
-
-/* IG Grid */
-.ig-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+/* CAKUNG, JAKARTA TIMUR */
+.text-alamat {
+    color: white;
+    font-size: 18.31px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 500;
+    line-height: 18.31px;
+    letter-spacing: 0.92px;
+    word-wrap: break-word;
+}
