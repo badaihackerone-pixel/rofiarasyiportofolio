@@ -3,44 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portofolio - Rofi Arasyi</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;700&display=swap" rel="stylesheet">
-    
-    <style>
-        /* Wajib ada agar div height: 100% Anda tidak runtuh menjadi 0px */
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-        }
-    </style>
+    <title>Asteroid B-612 // Rofi Arasyi</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div style="width: 100%; height: 100%; position: relative; background: white; overflow: hidden">
-        <div style="width: 745px; left: 347px; top: 12px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: center; display: inline-flex">
-            <div style="align-self: stretch; text-align: center; color: black; font-size: 75px; font-family: Oswald; font-weight: 400; word-wrap: break-word">portofolio</div>
-            <div style="align-self: stretch; text-align: center; color: black; font-size: 120px; font-family: Oswald; font-weight: 700; word-wrap: break-word">ROFI ARASYI</div>
+    <svg width="0" height="0" style="position:absolute;z-index:-1;">
+        <filter id="watercolor" x="-20%" y="-20%" width="140%" height="140%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+    </svg>
+
+    <div id="space-view" class="view active">
+        <div id="stars-layer-1" class="starfield"></div>
+        <div id="stars-layer-2" class="starfield"></div>
+        
+        <div class="planet p-float-1" id="p-home" style="top: 20%; left: 15%;" data-id="page-home">
+            <div class="crater c1"></div><div class="crater c2"></div><div class="rose"></div>
+            <span class="label">Asteroid B-612</span>
         </div>
-        <div style="width: 679px; left: 380px; top: 850px; position: absolute; text-align: center; color: black; font-size: 29.30px; font-family: Oswald; font-weight: 300; line-height: 29.30px; word-wrap: break-word">Dibuat untuk tugas mata pelajaran Pemrograman 2</div>
-        <div data-property-1="Default" style="width: 180.55px; height: 225.69px; left: 452px; top: 434.25px; position: absolute; transform: rotate(-9deg); transform-origin: top left">
-            <div style="width: 212.55px; height: 250.36px; left: 0px; top: 0px; position: absolute; background: black; border-radius: 25px; outline: 10px #5EA8E7 solid"></div>
+        
+        <div class="planet p-float-2" id="p-bounty" style="top: 70%; left: 25%;" data-id="page-bounty">
+            <div class="ring"></div>
+            <span class="label">The King</span>
         </div>
-        <div data-property-1="Default" style="width: 180.55px; height: 225.69px; left: 580px; top: 350.80px; position: absolute; transform: rotate(-3deg); transform-origin: top left">
-            <div style="width: 193.73px; height: 236.08px; left: 0px; top: 0px; position: absolute; background: black; border-radius: 25px; outline: 10px #C387C2 solid"></div>
+        
+        <div class="planet p-float-3" id="p-medfo" style="top: 25%; left: 75%;" data-id="page-medfo">
+            <div class="crater c3"></div>
+            <span class="label">Lamplighter</span>
         </div>
-        <div data-property-1="Default" style="width: 180.55px; height: 225.69px; left: 714.12px; top: 434px; position: absolute; transform: rotate(8deg); transform-origin: top left">
-            <div style="width: 210.84px; height: 249.09px; left: 0px; top: 0px; position: absolute; background: black; border-radius: 25px; outline: 10px #FF8796 solid"></div>
+
+        <div class="planet p-float-1" id="p-contact" style="top: 65%; left: 65%;" data-id="page-contact">
+            <div class="fox-ears"></div>
+            <span class="label">The Fox</span>
         </div>
-        <div data-property-1="Default" style="width: 180.55px; height: 225.69px; left: 808.04px; top: 351px; position: absolute; transform: rotate(3deg); transform-origin: top left">
-            <div style="width: 190.41px; height: 233.50px; left: 0px; top: 0px; position: absolute; background: black; border-radius: 25px; outline: 10px #D5F1D8 solid"></div>
-        </div>
-        <div style="width: 1490.36px; height: 952.22px; left: -12.41px; top: 81.72px; position: absolute; outline: 10px #F7DFF7 solid; outline-offset: -5px"></div>
-        <div style="width: 1254.02px; height: 1050.82px; left: 249.72px; top: -28.04px; position: absolute; outline: 10px #5CC2C6 solid; outline-offset: -5px"></div>
-        <div style="width: 1510.38px; height: 478.91px; left: -24.91px; top: 258.84px; position: absolute; outline: 10px #FFDABB solid; outline-offset: -5px"></div>
     </div>
+
+    <div id="surface-view" class="view">
+        <div id="sky"></div>
+        
+        <div id="clouds-container">
+            <div class="cloud" style="top: 10%; width: 120px; height: 30px; animation-duration: 25s;"></div>
+            <div class="cloud" style="top: 30%; width: 180px; height: 40px; animation-duration: 35s; animation-delay: -10s;"></div>
+            <div class="cloud" style="top: 15%; width: 90px; height: 25px; animation-duration: 20s; animation-delay: -5s;"></div>
+            <div class="cloud" style="top: 40%; width: 150px; height: 35px; animation-duration: 40s; animation-delay: -20s;"></div>
+        </div>
+
+        <div id="ground">
+            <div class="dune d1"></div>
+            <div class="dune d2"></div>
+        </div>
+        
+        <button id="btn-emergency-exit" onclick="takeOffToSpace()">[ESC] Lepas Landas</button>
+
+        <div id="content-container"></div>
+        <div id="escape-hint">↑ Terbang ke batas langit untuk kembali ↑</div>
+    </div>
+
+    <div id="player">
+        <svg viewBox="0 0 100 100" width="55" height="55">
+            <g filter="drop-shadow(2px 4px 2px rgba(0,0,0,0.4))">
+                <rect x="20" y="30" width="60" height="8" rx="4" fill="#f1c40f"/>
+                <path d="M35 30 L65 30 L70 70 L50 85 L30 70 Z" fill="#e74c3c"/>
+                <rect x="25" y="55" width="50" height="8" rx="4" fill="#f1c40f"/>
+                <circle cx="50" cy="50" r="10" fill="#2c3e50"/>
+                <ellipse cx="50" cy="15" rx="30" ry="5" fill="#bdc3c7" opacity="0.9"/>
+            </g>
+        </svg>
+    </div>
+
+    <template id="page-home">
+        <div class="layout-split">
+            <div class="text-content">
+                <h1>Asteroid B-612</h1>
+                <p class="quote">"Sesuatu yang penting tidak bisa dilihat oleh mata, melainkan oleh hati."</p>
+                <div class="data-block">
+                    <p><strong>Entitas:</strong> Rofi Arasyi</p>
+                    <p><strong>Rotasi Orbit:</strong> 8 Januari 2007</p>
+                    <p><strong>Koordinat Awal:</strong> Cakung, Jakarta Timur</p>
+                    <p><strong>Sektor Akademik:</strong> Teknik Elektro, FMIPA UNPAD</p>
+                    <p><strong>Identitas Registrasi:</strong> 140910250067</p>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="page-bounty">
+        <h1>The King</h1>
+        <p>Catatan eksploitasi berbayar. Vektor serangan disembunyikan berdasarkan protokol kerahasiaan (*Non-Disclosure/Unresolved*).</p>
+        <div class="grid-layout">
+            <div class="data-block p-critical">
+                <h3>[P1] Unity Technologies</h3>
+                <p class="bounty-reward">$3,000</p>
+                <p>Status: Unresolved. Detail serangan disembunyikan.</p>
+            </div>
+            <div class="data-block p-high">
+                <h3>[P2] Unity Technologies</h3>
+                <p class="bounty-reward">$1,200</p>
+                <p>Status: Resolved.</p>
+            </div>
+            <div class="data-block p-medium">
+                <h3>[P4] Unity Technologies</h3>
+                <p class="bounty-reward">$150</p>
+                <p>Status: Unresolved. Detail serangan disembunyikan.</p>
+            </div>
+        </div>
+    </template>
+
+    <template id="page-medfo">
+        <h1>Cahaya Pemantik</h1>
+        <p>Arsip transmisi visual Himpunan Mahasiswa Teknik Elektro (HMTE).</p>
+        <div class="gallery-grid">
+            <a href="https://www.instagram.com/p/DXqywCLEk7b/" target="_blank" class="gallery-item">
+                <img src="https://via.placeholder.com/300x300/1a1a1a/f4d03f?text=HMTE+Design+01" alt="Design 1">
+                <div class="overlay">Observasi 01</div>
+            </a>
+            <a href="https://www.instagram.com/p/DW34wLymD07/" target="_blank" class="gallery-item">
+                <img src="https://via.placeholder.com/300x300/1a1a1a/f4d03f?text=HMTE+Design+02" alt="Design 2">
+                <div class="overlay">Observasi 02</div>
+            </a>
+            <a href="https://www.instagram.com/p/DWyXcHfmLI4/" target="_blank" class="gallery-item">
+                <img src="https://via.placeholder.com/300x300/1a1a1a/f4d03f?text=HMTE+Design+03" alt="Design 3">
+                <div class="overlay">Observasi 03</div>
+            </a>
+            <a href="https://www.instagram.com/p/DV3Cp7Ckm78/" target="_blank" class="gallery-item">
+                <img src="https://via.placeholder.com/300x300/1a1a1a/f4d03f?text=HMTE+Design+04" alt="Design 4">
+                <div class="overlay">Observasi 04</div>
+            </a>
+        </div>
+    </template>
+
+    <template id="page-contact">
+        <h1>The Fox</h1>
+        <p class="quote">"Kamu menjadi bertanggung jawab selamanya atas apa yang telah kamu jinakkan."</p>
+        <div class="data-block">
+            <ul class="contact-list">
+                <li><a href="https://instagram.com/rofiarasyi" target="_blank">Instagram: @rofiarasyi</a></li>
+                <li><a href="https://www.linkedin.com/in/rofiarasyi/" target="_blank">LinkedIn: Rofi Arasyi</a></li>
+                <li><a href="https://github.com/badaihackerone-pixel" target="_blank">GitHub: badaihackerone-pixel</a></li>
+                <li><a href="https://bugcrowd.com/h/Badai" target="_blank">Bugcrowd: Badai</a></li>
+            </ul>
+        </div>
+    </template>
+
+    <script src="script.js"></script>
 </body>
 </html>
