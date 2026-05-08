@@ -26,9 +26,13 @@ const keys = { w: false, a: false, s: false, d: false };
 
 window.addEventListener('keydown', e => { 
     const key = e.key.toLowerCase();
-    if(['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(key)) {
-        e.preventDefault(); 
+    
+    if(currentState === 'SPACE') {
+        if(['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(key)) {
+            e.preventDefault(); 
+        }
     }
+    
     if(keys.hasOwnProperty(key)) keys[key] = true; 
     
     if(e.key === 'Escape' && currentState === 'SURFACE') takeOffToSpace();
@@ -40,36 +44,30 @@ window.addEventListener('keyup', e => {
 });
 
 function gameLoop() {
-    if (keys.w || keys.arrowup) vy -= speed;
-    if (keys.s || keys.arrowdown) vy += speed;
-    if (keys.a || keys.arrowleft) vx -= speed;
-    if (keys.d || keys.arrowright) vx += speed;
-
-    vx *= friction; vy *= friction;
-    
-    x += vx; y += vy;
-
-    if (x < 0) { x = 0; vx = 0; }
-    if (x > window.innerWidth - 60) { x = window.innerWidth - 60; vx = 0; }
-    if (y > window.innerHeight - 60) { y = window.innerHeight - 60; vy = 0; }
-    
     if (currentState === 'SPACE') {
+        if (keys.w || keys.arrowup) vy -= speed;
+        if (keys.s || keys.arrowdown) vy += speed;
+        if (keys.a || keys.arrowleft) vx -= speed;
+        if (keys.d || keys.arrowright) vx += speed;
+
+        vx *= friction; vy *= friction;
+        x += vx; y += vy;
+
+        if (x < 0) { x = 0; vx = 0; }
+        if (x > window.innerWidth - 60) { x = window.innerWidth - 60; vx = 0; }
+        if (y > window.innerHeight - 60) { y = window.innerHeight - 60; vy = 0; }
         if (y < 0) { y = 0; vy = 0; } 
-    } else if (currentState === 'SURFACE') {
-        if (y < 15) { 
-            takeOffToSpace(); 
-        }
-    }
 
-    let angle = Math.atan2(vy, vx) * (180 / Math.PI);
-    player.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${angle + 90}deg)`;
+        let angle = Math.atan2(vy, vx) * (180 / Math.PI);
+        player.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${angle + 90}deg)`;
 
-    if (currentState === 'SPACE') {
         if (collisionImmunity > 0) {
             collisionImmunity--;
         } else {
             checkPlanetCollision();
         }
+    } else if (currentState === 'SURFACE') {
+        player.style.display = 'none';
     }
 
     requestAnimationFrame(gameLoop);
@@ -95,14 +93,13 @@ function checkPlanetCollision() {
 function landOnPlanet(planet) {
     currentState = 'SURFACE';
     
+    surfaceView.scrollTop = 0;
+    
     contentContainer.innerHTML = document.getElementById(planet.getAttribute('data-id')).innerHTML;
     
     const env = planetData[planet.id];
     ground.style.background = env.ground;
     sky.style.background = env.sky;
-
-    y = window.innerHeight - 150;
-    vx = 0; vy = 0;
 
     spaceView.classList.remove('active');
     surfaceView.classList.add('active');
@@ -110,6 +107,8 @@ function landOnPlanet(planet) {
 
 function takeOffToSpace() {
     currentState = 'SPACE';
+    
+    player.style.display = 'block';
     
     collisionImmunity = 60; 
     
