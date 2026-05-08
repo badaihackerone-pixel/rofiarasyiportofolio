@@ -9,65 +9,92 @@
 <body>
     <svg width="0" height="0" style="position:absolute;z-index:-1;">
         <filter id="watercolor" x="-20%" y="-20%" width="140%" height="140%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise" />
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G" />
+            <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="4" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+        <filter id="paper-texture">
+            <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="5" result="noise" />
+            <feColorMatrix type="matrix" values="1 0 0 0 0  0 0.98 0 0 0  0 0.94 0 0 0  0 0 0 0.3 0" in="noise" result="coloredNoise" />
+            <feBlend in="SourceGraphic" in2="coloredNoise" mode="multiply" />
         </filter>
     </svg>
 
     <div id="space-view" class="view active">
         <div id="stars-layer-1" class="starfield"></div>
         <div id="stars-layer-2" class="starfield"></div>
+        <div id="stars-layer-3" class="starfield"></div>
         
-        <div class="planet p-float-1" id="p-home" style="top: 20%; left: 15%;" data-id="page-home">
-            <div class="crater c1"></div><div class="crater c2"></div><div class="rose"></div>
+        <div class="planet p-float-1" id="p-home" style="top: 15%; left: 15%;" data-id="page-home">
+            <div class="crater c1"></div><div class="crater c2"></div>
+            <div class="rose-container">
+                <div class="glass-dome"></div>
+                <div class="rose-flower"></div>
+            </div>
             <span class="label">Asteroid B-612</span>
+            <div class="atmosphere-glow"></div>
         </div>
         
-        <div class="planet p-float-2" id="p-bounty" style="top: 70%; left: 25%;" data-id="page-bounty">
-            <div class="ring"></div>
+        <div class="planet p-float-2" id="p-bounty" style="top: 65%; left: 20%;" data-id="page-bounty">
+            <div class="css-crown"></div>
             <span class="label">The King</span>
+            <div class="atmosphere-glow"></div>
         </div>
         
-        <div class="planet p-float-3" id="p-medfo" style="top: 25%; left: 75%;" data-id="page-medfo">
-            <div class="crater c3"></div>
+        <div class="planet p-float-3" id="p-medfo" style="top: 20%; left: 75%;" data-id="page-medfo">
+            <div class="css-lamp">
+                <div class="lamp-head"></div>
+                <div class="lamp-post"></div>
+                <div class="lamp-light"></div>
+            </div>
             <span class="label">Lamplighter</span>
+            <div class="atmosphere-glow"></div>
         </div>
 
-        <div class="planet p-float-1" id="p-contact" style="top: 65%; left: 65%;" data-id="page-contact">
-            <div class="fox-ears"></div>
+        <div class="planet p-float-1" id="p-contact" style="top: 70%; left: 70%;" data-id="page-contact">
+            <div class="css-fox">
+                <div class="fox-ear left"></div>
+                <div class="fox-ear right"></div>
+                <div class="fox-face"></div>
+            </div>
             <span class="label">The Fox</span>
+            <div class="atmosphere-glow"></div>
         </div>
     </div>
 
     <div id="surface-view" class="view">
         <div id="sky"></div>
+        <div id="stars-surface" class="starfield" style="opacity: 0.3;"></div>
         
         <div id="clouds-container">
-            <div class="cloud" style="top: 10%; width: 120px; height: 30px; animation-duration: 25s;"></div>
-            <div class="cloud" style="top: 30%; width: 180px; height: 40px; animation-duration: 35s; animation-delay: -10s;"></div>
-            <div class="cloud" style="top: 15%; width: 90px; height: 25px; animation-duration: 20s; animation-delay: -5s;"></div>
-            <div class="cloud" style="top: 40%; width: 150px; height: 35px; animation-duration: 40s; animation-delay: -20s;"></div>
+            <div class="cloud" style="top: 8%; width: 150px; height: 35px; animation-duration: 45s; opacity: 0.8;"></div>
+            <div class="cloud" style="top: 25%; width: 220px; height: 50px; animation-duration: 60s; animation-delay: -15s; opacity: 0.6;"></div>
+            <div class="cloud" style="top: 15%; width: 110px; height: 25px; animation-duration: 35s; animation-delay: -5s; opacity: 0.7;"></div>
+            <div class="cloud" style="top: 35%; width: 180px; height: 40px; animation-duration: 50s; animation-delay: -25s; opacity: 0.5;"></div>
+            <div class="cloud" style="top: 5%; width: 250px; height: 60px; animation-duration: 70s; animation-delay: -40s; opacity: 0.4;"></div>
         </div>
 
         <div id="ground">
             <div class="dune d1"></div>
             <div class="dune d2"></div>
+            <div class="dune d3"></div>
         </div>
         
         <button id="btn-emergency-exit" onclick="takeOffToSpace()">[ESC] Lepas Landas</button>
 
         <div id="content-container"></div>
-        <div id="escape-hint">↑ Terbang ke batas langit untuk kembali ↑</div>
+        <div id="escape-hint">↑ Terbang menembus batas langit untuk kembali ↑</div>
     </div>
 
     <div id="player">
-        <svg viewBox="0 0 100 100" width="55" height="55">
-            <g filter="drop-shadow(2px 4px 2px rgba(0,0,0,0.4))">
-                <rect x="20" y="30" width="60" height="8" rx="4" fill="#f1c40f"/>
-                <path d="M35 30 L65 30 L70 70 L50 85 L30 70 Z" fill="#e74c3c"/>
-                <rect x="25" y="55" width="50" height="8" rx="4" fill="#f1c40f"/>
-                <circle cx="50" cy="50" r="10" fill="#2c3e50"/>
-                <ellipse cx="50" cy="15" rx="30" ry="5" fill="#bdc3c7" opacity="0.9"/>
+        <svg viewBox="0 0 100 100" width="60" height="60">
+            <g filter="drop-shadow(2px 5px 3px rgba(0,0,0,0.5))">
+                <rect x="15" y="32" width="70" height="6" rx="3" fill="#f1c40f"/>
+                <path d="M30 32 L70 32 L75 68 L50 85 L25 68 Z" fill="#c0392b"/>
+                <rect x="20" y="58" width="60" height="6" rx="3" fill="#f1c40f"/>
+                <path d="M45 32 L50 20 L55 32 Z" fill="#e67e22"/>
+                <circle cx="50" cy="50" r="12" fill="#2c3e50"/>
+                <path d="M40 50 Q50 40 60 50" stroke="#ecf0f1" stroke-width="2" fill="none" opacity="0.5"/>
+                <ellipse cx="50" cy="12" rx="35" ry="4" fill="#ecf0f1" opacity="0.8"/>
             </g>
         </svg>
     </div>
@@ -78,57 +105,76 @@
                 <h1>Asteroid B-612</h1>
                 <p class="quote">"Sesuatu yang penting tidak bisa dilihat oleh mata, melainkan oleh hati."</p>
                 <div class="data-block">
-                    <p><strong>Entitas:</strong> Rofi Arasyi</p>
-                    <p><strong>Rotasi Orbit:</strong> 8 Januari 2007</p>
-                    <p><strong>Koordinat Awal:</strong> Cakung, Jakarta Timur</p>
-                    <p><strong>Sektor Akademik:</strong> Teknik Elektro, FMIPA UNPAD</p>
-                    <p><strong>Identitas Registrasi:</strong> 140910250067</p>
+                    <p><strong>Nama:</strong> Rofi Arasyi</p>
+                    <p><strong>Tanggal Lahir:</strong> 8 Januari 2007</p>
+                    <p><strong>Domisili:</strong> Cakung, Jakarta Timur</p>
+                    <p><strong>Pendidikan:</strong> Teknik Elektro, FMIPA UNPAD</p>
+                    <p><strong>NPM:</strong> 140910250067</p>
                 </div>
+            </div>
+            <div class="photo-frame">
+                <div class="photo-inner">
+                    <img src="assets/foto.jpg" alt="Rofi Arasyi" onerror="this.style.display='none'">
+                    <div class="css-photo-placeholder"></div>
+                </div>
+                <div class="photo-caption">Rofi Arasyi</div>
             </div>
         </div>
     </template>
 
     <template id="page-bounty">
         <h1>The King</h1>
-        <p>Catatan eksploitasi berbayar. Vektor serangan disembunyikan berdasarkan protokol kerahasiaan (*Non-Disclosure/Unresolved*).</p>
         <div class="grid-layout">
             <div class="data-block p-critical">
-                <h3>[P1] Unity Technologies</h3>
+                <div class="bounty-header">
+                    <h3>Unity Technologies</h3>
+                    <span class="badge red">P1</span>
+                </div>
                 <p class="bounty-reward">$3,000</p>
-                <p>Status: Unresolved. Detail serangan disembunyikan.</p>
+                <p class="status-text">Status: Unresolved</p>
             </div>
             <div class="data-block p-high">
-                <h3>[P2] Unity Technologies</h3>
+                <div class="bounty-header">
+                    <h3>Unity Technologies</h3>
+                    <span class="badge orange">P2</span>
+                </div>
                 <p class="bounty-reward">$1,200</p>
-                <p>Status: Resolved.</p>
+                <p class="status-text">Status: Resolved</p>
             </div>
             <div class="data-block p-medium">
-                <h3>[P4] Unity Technologies</h3>
+                <div class="bounty-header">
+                    <h3>Unity Technologies</h3>
+                    <span class="badge yellow">P4</span>
+                </div>
                 <p class="bounty-reward">$150</p>
-                <p>Status: Unresolved. Detail serangan disembunyikan.</p>
+                <p class="status-text">Status: Unresolved</p>
             </div>
         </div>
     </template>
 
     <template id="page-medfo">
         <h1>Cahaya Pemantik</h1>
-        <p>Arsip transmisi visual Himpunan Mahasiswa Teknik Elektro (HMTE).</p>
-        <div class="gallery-grid">
-            <a href="https://www.instagram.com/p/DXqywCLEk7b/" target="_blank" class="gallery-item">
-                <img src="https://via.placeholder.com/300x300/1a1a1a/f4d03f?text=HMTE+Design+01" alt="Design 1">
-                <div class="overlay">Observasi 01</div>
+        <p>Arsip Desain Himpunan Mahasiswa Teknik Elektro (HMTE).</p>
+        <div class="css-gallery-grid">
+            <a href="https://www.instagram.com/p/DXqywCLEk7b/" target="_blank" class="css-ig-post">
+                <div class="ig-header"><div class="ig-avatar"></div><div class="ig-name">hmte_unpad</div></div>
+                <div class="ig-media art-1"></div>
+                <div class="ig-footer"><div class="ig-bar"></div><div class="ig-text"></div></div>
             </a>
-            <a href="https://www.instagram.com/p/DW34wLymD07/" target="_blank" class="gallery-item">
-                <img src="https://via.placeholder.com/300x300/1a1a1a/f4d03f?text=HMTE+Design+02" alt="Design 2">
-                <div class="overlay">Observasi 02</div>
+            <a href="https://www.instagram.com/p/DW34wLymD07/" target="_blank" class="css-ig-post">
+                <div class="ig-header"><div class="ig-avatar"></div><div class="ig-name">hmte_unpad</div></div>
+                <div class="ig-media art-2"></div>
+                <div class="ig-footer"><div class="ig-bar"></div><div class="ig-text"></div></div>
             </a>
-            <a href="https://www.instagram.com/p/DWyXcHfmLI4/" target="_blank" class="gallery-item">
-                <img src="https://via.placeholder.com/300x300/1a1a1a/f4d03f?text=HMTE+Design+03" alt="Design 3">
-                <div class="overlay">Observasi 03</div>
+            <a href="https://www.instagram.com/p/DWyXcHfmLI4/" target="_blank" class="css-ig-post">
+                <div class="ig-header"><div class="ig-avatar"></div><div class="ig-name">hmte_unpad</div></div>
+                <div class="ig-media art-3"></div>
+                <div class="ig-footer"><div class="ig-bar"></div><div class="ig-text"></div></div>
             </a>
-            <a href="https://www.instagram.com/p/DV3Cp7Ckm78/" target="_blank" class="gallery-item">
-                <img src="https://via.placeholder.com/300x300/1a1a1a/f4d03f?text=HMTE+Design+04" alt="Design 4">
-                <div class="overlay">Observasi 04</div>
+            <a href="https://www.instagram.com/p/DV3Cp7Ckm78/" target="_blank" class="css-ig-post">
+                <div class="ig-header"><div class="ig-avatar"></div><div class="ig-name">hmte_unpad</div></div>
+                <div class="ig-media art-4"></div>
+                <div class="ig-footer"><div class="ig-bar"></div><div class="ig-text"></div></div>
             </a>
         </div>
     </template>
@@ -136,12 +182,24 @@
     <template id="page-contact">
         <h1>The Fox</h1>
         <p class="quote">"Kamu menjadi bertanggung jawab selamanya atas apa yang telah kamu jinakkan."</p>
-        <div class="data-block">
+        <div class="data-block contact-block">
             <ul class="contact-list">
-                <li><a href="https://instagram.com/rofiarasyi" target="_blank">Instagram: @rofiarasyi</a></li>
-                <li><a href="https://www.linkedin.com/in/rofiarasyi/" target="_blank">LinkedIn: Rofi Arasyi</a></li>
-                <li><a href="https://github.com/badaihackerone-pixel" target="_blank">GitHub: badaihackerone-pixel</a></li>
-                <li><a href="https://bugcrowd.com/h/Badai" target="_blank">Bugcrowd: Badai</a></li>
+                <li>
+                    <span class="icon-css ig-icon"></span>
+                    <a href="https://instagram.com/rofiarasyi" target="_blank">@rofiarasyi</a>
+                </li>
+                <li>
+                    <span class="icon-css ln-icon"></span>
+                    <a href="https://www.linkedin.com/in/rofiarasyi/" target="_blank">Rofi Arasyi</a>
+                </li>
+                <li>
+                    <span class="icon-css gh-icon"></span>
+                    <a href="https://github.com/badaihackerone-pixel" target="_blank">badaihackerone-pixel</a>
+                </li>
+                <li>
+                    <span class="icon-css bc-icon"></span>
+                    <a href="https://bugcrowd.com/h/Badai" target="_blank">Badai</a>
+                </li>
             </ul>
         </div>
     </template>
