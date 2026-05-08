@@ -1,19 +1,19 @@
 const player = document.getElementById('player');
+const exhaust = document.getElementById('engine-exhaust');
 const spaceView = document.getElementById('space-view');
 const surfaceView = document.getElementById('surface-view');
 const contentContainer = document.getElementById('content-container');
 const sky = document.getElementById('sky');
 const ground = document.getElementById('ground');
 const planets = document.querySelectorAll('.planet');
-const escapeHint = document.getElementById('escape-hint');
+const flightInstructions = document.getElementById('flight-instructions');
 
 let currentState = 'SPACE';
 
-// Titik spawn di angkasa
 let x = window.innerWidth / 2;
 let y = window.innerHeight - 150; 
 let vx = 0; let vy = 0;
-const speed = 0.9; const friction = 0.90; 
+const speed = 0.9; const friction = 0.92; 
 
 let collisionImmunity = 60;
 
@@ -30,40 +30,49 @@ window.addEventListener('keydown', e => {
     const key = e.key.toLowerCase();
     if(keys.hasOwnProperty(key)) {
         keys[key] = true;
-        // Mencegah scroll standar browser, hanya pesawat yang boleh scroll
         if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(key)) {
             e.preventDefault(); 
         }
     }
+    
+    // UI Guide Highlights
+    if(document.getElementById('key-' + key)) {
+        document.getElementById('key-' + key).classList.add('active');
+    }
+
     if(e.key === 'Escape' && currentState === 'SURFACE') takeOffToSpace();
 });
 
 window.addEventListener('keyup', e => { 
     const key = e.key.toLowerCase();
     if(keys.hasOwnProperty(key)) keys[key] = false; 
+    
+    if(document.getElementById('key-' + key)) {
+        document.getElementById('key-' + key).classList.remove('active');
+    }
 });
 
 function gameLoop() {
-    // Input pergerakan pesawat
-    if (keys.w || keys.arrowup) vy -= speed;
-    if (keys.s || keys.arrowdown) vy += speed;
-    if (keys.a || keys.arrowleft) vx -= speed;
-    if (keys.d || keys.arrowright) vx += speed;
+    let isMoving = false;
+    
+    if (keys.w || keys.arrowup) { vy -= speed; isMoving = true; }
+    if (keys.s || keys.arrowdown) { vy += speed; isMoving = true; }
+    if (keys.a || keys.arrowleft) { vx -= speed; isMoving = true; }
+    if (keys.d || keys.arrowright) { vx += speed; isMoving = true; }
 
     vx *= friction; vy *= friction;
-    
     x += vx; y += vy;
 
-    // Batasan X (Kiri Kanan layar)
+    if(isMoving) exhaust.style.opacity = '1';
+    else exhaust.style.opacity = '0';
+
     if (x < 0) { x = 0; vx = 0; }
     if (x > window.innerWidth - 65) { x = window.innerWidth - 65; vx = 0; }
     
-    // Mesin State
     if (currentState === 'SPACE') {
-        // Angkasa: Batasan Y biasa
         if (y < 0) { y = 0; vy = 0; }
         if (y > window.innerHeight - 65) { y = window.innerHeight - 65; vy = 0; }
-        escapeHint.style.display = 'none';
+        flightInstructions.style.display = 'none';
 
         if (collisionImmunity > 0) {
             collisionImmunity--;
@@ -72,26 +81,24 @@ function gameLoop() {
         }
 
     } else if (currentState === 'SURFACE') {
-        // Permukaan Planet: Mekanisme SCROLL menggunakan pesawat
-        escapeHint.style.display = 'block';
+        flightInstructions.style.display = 'block';
         
-        // Batas bawah layar saat terbang di dalam planet
+        const scrollSpeedMultiplier = 2.0;
+
         if (y > window.innerHeight - 100) { 
             y = window.innerHeight - 100;
-            // Jika memaksa ke bawah, scroll halaman ke bawah
-            if (vy > 0) surfaceView.scrollTop += (vy * 1.5);
+            if (vy > 0) {
+                surfaceView.scrollBy({ top: vy * scrollSpeedMultiplier, behavior: 'auto' });
+            }
         }
         
-        // Batas atas layar saat terbang di dalam planet
         if (y < 80) {
             y = 80;
-            // Jika memaksa ke atas, scroll halaman ke atas
             if (vy < 0) {
                 if (surfaceView.scrollTop > 0) {
-                    surfaceView.scrollTop += (vy * 1.5);
+                    surfaceView.scrollBy({ top: vy * scrollSpeedMultiplier, behavior: 'auto' });
                 } else {
-                    // Jika halaman sudah mentok atas dan masih memaksa terbang ke atas, Lepas Landas
-                    if (y < 80 && vy < -1.5) {
+                    if (y <= 80 && vy < -1.5) {
                         takeOffToSpace();
                     }
                 }
@@ -99,7 +106,6 @@ function gameLoop() {
         }
     }
 
-    // Render pergerakan
     let angle = Math.atan2(vy, vx) * (180 / Math.PI);
     player.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${angle + 90}deg)`;
 
@@ -132,7 +138,6 @@ function landOnPlanet(planet) {
     ground.style.background = env.ground;
     sky.style.background = env.sky;
 
-    // Saat masuk planet, tempatkan pesawat di tengah layar
     x = window.innerWidth / 2;
     y = window.innerHeight / 2;
     vx = 0; vy = 0;
@@ -146,9 +151,8 @@ function takeOffToSpace() {
     collisionImmunity = 60; 
     
     vx = 0; 
-    vy = -12; // Melesat cepat ke angkasa
+    vy = -12; 
     
-    // Kembali ke posisi aman di bawah tengah angkasa
     x = window.innerWidth / 2;
     y = window.innerHeight - 150;
     
