@@ -62,8 +62,12 @@ function gameLoop() {
     vx *= friction; vy *= friction;
     x += vx; y += vy;
 
-    if(isMoving) exhaust.style.opacity = '1';
-    else exhaust.style.opacity = '0';
+    // Aktifkan visual Thrust jika pesawat bergerak
+    if(isMoving || Math.abs(vx) > 0.5 || Math.abs(vy) > 0.5) {
+        exhaust.style.opacity = '1';
+    } else {
+        exhaust.style.opacity = '0';
+    }
 
     if (x < 0) { x = 0; vx = 0; }
     if (x > window.innerWidth - 75) { x = window.innerWidth - 75; vx = 0; }
@@ -87,6 +91,7 @@ function gameLoop() {
         const isAtTop = surfaceView.scrollTop === 0;
         const isAtBottom = surfaceView.scrollHeight - surfaceView.scrollTop <= surfaceView.clientHeight + 10;
 
+        // Kontrol Visibilitas Guide
         if (isAtTop) guideTop.style.display = 'block'; else guideTop.style.display = 'none';
         if (!isAtBottom) guideBottom.style.display = 'block'; else guideBottom.style.display = 'none';
 
@@ -111,6 +116,7 @@ function gameLoop() {
         }
     }
 
+    // Rotasi pesawat selalu menuju arah pergerakan
     let angle = Math.atan2(vy, vx) * (180 / Math.PI);
     player.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${angle + 90}deg)`;
 
