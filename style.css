@@ -29,10 +29,31 @@ body {
 }
 .view.active { opacity: 1; pointer-events: auto; }
 
-/* KUNCI SCROLL MURNI OLEH PESAWAT */
 #surface-view { overflow: hidden; }
 
-/* BINTANG & LUAR ANGKASA */
+/* MAIN TITLE (MAX VISUAL) */
+.main-title {
+    position: absolute; top: 8%; left: 50%; transform: translateX(-50%);
+    text-align: center; z-index: 10; pointer-events: none;
+}
+.main-title h1 {
+    font-family: var(--book-font); font-size: 3.5rem; color: #fff;
+    text-shadow: 0 0 20px rgba(241, 196, 15, 0.5), 0 0 40px rgba(241, 196, 15, 0.3), 0 5px 5px rgba(0,0,0,0.8);
+    margin: 0; letter-spacing: 2px; line-height: 1.1;
+}
+.main-title p {
+    font-family: var(--sans-font); color: var(--gold); font-size: 1.1rem;
+    letter-spacing: 6px; text-transform: uppercase; margin-top: 15px;
+    text-shadow: 0 2px 5px #000; font-weight: bold;
+}
+
+/* DEEP NEBULA BACKGROUND */
+.nebula-bg {
+    position: absolute; width: 100vw; height: 100vh; z-index: 0; pointer-events: none;
+    background: radial-gradient(circle at 50% 40%, rgba(26, 37, 73, 0.4) 0%, rgba(3, 4, 8, 1) 60%);
+}
+
+/* BINTANG TWINKLING */
 .starfield {
     position: fixed; width: 100vw; height: 100vh; z-index: 0; pointer-events: none;
     background-image: 
@@ -48,6 +69,11 @@ body {
 #stars-layer-2 { background-size: 350px 350px; opacity: 0.6; transform: rotate(45deg); }
 #stars-layer-3 { background-size: 450px 450px; opacity: 0.3; transform: rotate(-45deg); }
 
+@keyframes twinkle { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+.twinkle-1 { animation: twinkle 4s ease-in-out infinite; }
+.twinkle-2 { animation: twinkle 6s ease-in-out infinite 1s; }
+.twinkle-3 { animation: twinkle 8s ease-in-out infinite 2s; }
+
 .shooting-star { position: absolute; width: 150px; height: 2px; background: linear-gradient(to right, rgba(255,255,255,0), #fff); top: 10%; right: 10%; transform: rotate(-45deg); animation: shoot 8s infinite; opacity: 0; }
 @keyframes shoot { 0% { transform: translate(0,0) rotate(-45deg); opacity: 1; } 15% { transform: translate(-400px, 400px) rotate(-45deg); opacity: 0; } 100% { opacity: 0; } }
 
@@ -58,18 +84,32 @@ body {
 .d3 { width: 5px; height: 5px; top: 50%; left: 80%; animation-duration: 15s; }
 @keyframes floatAsteroid { 0% { transform: rotate(0deg) translate(0, 0); } 50% { transform: rotate(180deg) translate(30px, -30px); } 100% { transform: rotate(360deg) translate(0, 0); } }
 
-/* UI GUIDE */
+/* UI GUIDE ANGKASA */
 #flight-guide {
-    position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.6); padding: 20px;
-    border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(5px);
-    text-align: center; z-index: 10; pointer-events: none;
+    position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.7); padding: 25px;
+    border-radius: 12px; border: 1px solid rgba(241, 196, 15, 0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    backdrop-filter: blur(8px); text-align: center; z-index: 10; pointer-events: none;
 }
 #flight-guide h3 { margin: 0 0 15px 0; font-family: var(--sans-font); color: var(--gold); letter-spacing: 2px; font-size: 1rem; }
 .keyboard-layout { display: flex; flex-direction: column; align-items: center; gap: 5px; margin-bottom: 15px; }
 .key-row { display: flex; gap: 5px; }
-.key { width: 35px; height: 35px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.5); border-radius: 6px; display: flex; justify-content: center; align-items: center; font-weight: bold; font-family: monospace; transition: all 0.1s; }
+.key { width: 40px; height: 40px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.5); border-radius: 8px; display: flex; justify-content: center; align-items: center; font-weight: 900; font-family: var(--sans-font); transition: all 0.1s; font-size: 1.1rem; }
 .key.active { background: var(--gold); color: #000; border-color: var(--gold); transform: scale(0.9); box-shadow: 0 0 15px var(--gold); }
-#flight-guide p { margin: 0; font-size: 0.85rem; color: #ccc; line-height: 1.5; }
+#flight-guide p { margin: 0; font-size: 0.95rem; color: #ddd; line-height: 1.6; font-family: var(--sans-font); }
+
+/* HUD PERMUKAAN PLANET (UP/DOWN SCROLL) */
+#surface-hud {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    pointer-events: none; z-index: 50; transition: opacity 0.5s ease;
+}
+.hud-up { position: absolute; top: 40px; left: 50%; transform: translateX(-50%); text-align: center; animation: floatUp 2s infinite ease-in-out; }
+.hud-down { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); text-align: center; animation: floatDown 2s infinite ease-in-out; }
+.hud-up span, .hud-down span { font-family: var(--sans-font); color: rgba(255,255,255,0.9); font-weight: 900; font-size: 1.1rem; text-shadow: 0 2px 8px #000; text-transform: uppercase; letter-spacing: 3px; display: block; line-height: 1.4;}
+.arrow-up { width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 25px solid var(--gold); margin: 0 auto 10px auto; filter: drop-shadow(0 0 10px var(--gold)); }
+.arrow-down { width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 25px solid var(--gold); margin: 10px auto 0 auto; filter: drop-shadow(0 0 10px var(--gold)); }
+
+@keyframes floatUp { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, -10px); } }
+@keyframes floatDown { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, 10px); } }
 
 /* ANIMASI MELAYANG PLANET */
 @keyframes float1 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
@@ -80,18 +120,18 @@ body {
 .p-float-2 { animation: float2 7s ease-in-out infinite; }
 .p-float-3 { animation: float3 9s ease-in-out infinite reverse; }
 
-/* DESAIN PLANET */
+/* DESAIN PLANET TIGA DIMENSI MAX */
 .planet {
     position: absolute; width: 170px; height: 170px; border-radius: 50%;
-    box-shadow: inset -30px -30px 40px rgba(0,0,0,0.8), inset 15px 15px 30px rgba(255,255,255,0.3), 0 0 50px rgba(0,0,0,0.5);
+    box-shadow: inset -40px -40px 50px rgba(0,0,0,0.9), inset 15px 15px 30px rgba(255,255,255,0.3), 0 0 50px rgba(0,0,0,0.6);
     display: flex; justify-content: center; align-items: center; cursor: pointer;
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s;
     z-index: 5; filter: url(#watercolor);
 }
-.planet:hover { transform: scale(1.15); box-shadow: inset -30px -30px 40px rgba(0,0,0,0.8), inset 15px 15px 30px rgba(255,255,255,0.5), 0 0 80px rgba(241,196,15,0.5); }
+.planet:hover { transform: scale(1.15); box-shadow: inset -40px -40px 50px rgba(0,0,0,0.9), inset 15px 15px 30px rgba(255,255,255,0.5), 0 0 80px rgba(241,196,15,0.6); }
 
-.atmosphere-glow { position: absolute; width: 100%; height: 100%; border-radius: 50%; box-shadow: 0 0 40px 8px rgba(255,255,255,0.15); pointer-events: none; }
-.orbit-ring { position: absolute; width: 220%; height: 220%; border: 1px dashed rgba(255,255,255,0.1); border-radius: 50%; pointer-events: none; animation: spin 40s linear infinite; }
+.atmosphere-glow { position: absolute; width: 100%; height: 100%; border-radius: 50%; box-shadow: 0 0 45px 12px rgba(255,255,255,0.15); pointer-events: none; }
+.orbit-ring { position: absolute; width: 230%; height: 230%; border: 1px dashed rgba(255,255,255,0.15); border-radius: 50%; pointer-events: none; animation: spin 45s linear infinite; }
 @keyframes spin { 100% { transform: rotate(360deg); } }
 
 #p-home { background: radial-gradient(circle at 35% 35%, #ffd32a, #d35400, #5c2c00); }
@@ -122,7 +162,7 @@ body {
 .left { left: 0; transform: rotate(-20deg); }
 .right { right: 0; transform: rotate(20deg); }
 
-.label { position: absolute; bottom: -50px; font-family: var(--book-font); font-size: 1.25rem; color: #fff; text-shadow: 2px 2px 10px rgba(0,0,0,0.9); white-space: nowrap; letter-spacing: 1.5px; }
+.label { position: absolute; bottom: -50px; font-family: var(--book-font); font-size: 1.25rem; color: #fff; text-shadow: 2px 2px 10px rgba(0,0,0,0.9); white-space: nowrap; letter-spacing: 1.5px; font-weight: bold;}
 
 /* LINGKUNGAN PERMUKAAN (ATMOSFER PLANET) */
 #sky { position: fixed; width: 100vw; height: 100vh; top: 0; transition: background 2s ease; z-index: 1; pointer-events: none; }
@@ -143,64 +183,62 @@ body {
 .cloud::after { width: 40%; height: 120%; top: -30%; right: 20%; }
 @keyframes drift { from { transform: translateX(-30vw); } to { transform: translateX(130vw); } }
 
-#btn-emergency-exit { position: fixed; top: 25px; right: 25px; z-index: 50; background: rgba(0,0,0,0.6); color: #fff; border: 2px solid rgba(241, 196, 15, 0.5); padding: 12px 20px; border-radius: 8px; font-family: var(--sans-font); font-weight: bold; cursor: pointer; backdrop-filter: blur(5px); transition: all 0.3s; }
+#btn-emergency-exit { position: fixed; top: 25px; right: 25px; z-index: 60; background: rgba(0,0,0,0.6); color: #fff; border: 2px solid rgba(241, 196, 15, 0.5); padding: 12px 20px; border-radius: 8px; font-family: var(--sans-font); font-weight: bold; cursor: pointer; backdrop-filter: blur(5px); transition: all 0.3s; }
 #btn-emergency-exit:hover { background: var(--gold); color: #000; border-color: var(--gold); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(241, 196, 15, 0.4); }
 
 #content-container { position: relative; top: 10vh; left: 50%; transform: translateX(-50%); width: 90%; max-width: 950px; z-index: 10; padding-bottom: 50px; margin-top: 50px;}
 
 /* TIPOGRAFI & LAYOUT */
-h1 { font-family: var(--book-font); font-size: 3.8rem; border-bottom: 2px solid rgba(255,255,255,0.2); padding-bottom: 8px; margin-bottom: 15px; text-shadow: 2px 4px 10px rgba(0,0,0,0.8); }
-.quote { font-family: var(--book-font); font-style: italic; color: var(--gold); font-size: 1.5rem; margin-bottom: 25px; text-shadow: 1px 2px 5px rgba(0,0,0,0.6); }
+h1 { font-family: var(--book-font); font-size: 4rem; border-bottom: 2px solid rgba(255,255,255,0.2); padding-bottom: 10px; margin-bottom: 15px; text-shadow: 2px 4px 10px rgba(0,0,0,0.8); }
+.quote { font-family: var(--book-font); font-style: italic; color: var(--gold); font-size: 1.6rem; margin-bottom: 30px; text-shadow: 1px 2px 5px rgba(0,0,0,0.6); }
 
-.narrative-text { background: linear-gradient(135deg, rgba(20,20,25,0.85), rgba(10,10,15,0.95)); padding: 25px 30px; margin-bottom: 30px; border-radius: 10px; border-left: 5px solid var(--gold); font-size: 1.2rem; line-height: 1.8; box-shadow: 0 10px 30px rgba(0,0,0,0.5); filter: url(#watercolor); }
+.narrative-text { background: linear-gradient(135deg, rgba(20,20,25,0.85), rgba(10,10,15,0.95)); padding: 25px 30px; margin-bottom: 30px; border-radius: 10px; border-left: 5px solid var(--gold); font-size: 1.25rem; line-height: 1.8; box-shadow: 0 10px 30px rgba(0,0,0,0.5); filter: url(#watercolor); }
 .narrative-text p { margin: 0; }
 
-.data-block { background: rgba(15,15,20,0.75); padding: 30px; margin-bottom: 25px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); border-left: 6px solid var(--gold); box-shadow: 0 15px 40px rgba(0,0,0,0.4); line-height: 1.8; font-size: 1.15rem; filter: url(#watercolor); }
+.data-block { background: rgba(15,15,20,0.75); padding: 30px; margin-bottom: 25px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); border-left: 6px solid var(--gold); box-shadow: 0 15px 40px rgba(0,0,0,0.4); line-height: 1.8; font-size: 1.2rem; filter: url(#watercolor); }
 .data-block p { margin: 12px 0; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 8px; }
 .data-block p:last-child { border-bottom: none; }
 
 .layout-split { display: flex; gap: 50px; align-items: flex-start; }
 .text-content { flex: 1.8; }
-.photo-frame { flex: 1; background: #fff; padding: 15px 15px 60px 15px; box-shadow: 15px 20px 40px rgba(0,0,0,0.8); transform: rotate(3deg); border-radius: 2px; text-align: center; position: relative; filter: url(#watercolor); }
+.photo-frame { flex: 1; background: #fff; padding: 15px 15px 60px 15px; box-shadow: 15px 20px 40px rgba(0,0,0,0.8); transform: rotate(3deg); border-radius: 2px; text-align: center; position: sticky; top: 40px; filter: url(#watercolor); }
 .photo-inner { position: relative; width: 100%; aspect-ratio: 1/1; background: #eee; border: 1px solid #ccc; overflow: hidden; box-shadow: inset 0 0 10px rgba(0,0,0,0.2); }
 .photo-inner img { width: 100%; height: 100%; object-fit: cover; position: relative; z-index: 2; }
 .css-photo-placeholder { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: repeating-linear-gradient(45deg, #e0e0e0, #e0e0e0 15px, #d0d0d0 15px, #d0d0d0 30px); z-index: 1; }
-.photo-caption { position: absolute; bottom: 20px; left: 0; width: 100%; color: #333; font-family: var(--book-font); font-style: italic; font-size: 1.2rem; font-weight: bold; }
+.photo-caption { position: absolute; bottom: 20px; left: 0; width: 100%; color: #333; font-family: var(--book-font); font-style: italic; font-size: 1.3rem; font-weight: bold; }
 
 .grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
 .bounty-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; }
-.bounty-header h3 { margin: 0; font-family: var(--book-font); font-size: 1.5rem; }
-.badge { padding: 5px 12px; border-radius: 6px; font-weight: 900; font-size: 1rem; color: #fff; box-shadow: 0 3px 6px rgba(0,0,0,0.3); }
+.bounty-header h3 { margin: 0; font-family: var(--book-font); font-size: 1.6rem; }
+.badge { padding: 6px 14px; border-radius: 6px; font-weight: 900; font-size: 1.1rem; color: #fff; box-shadow: 0 3px 6px rgba(0,0,0,0.3); }
 .badge.red { background: var(--red); }
 .badge.orange { background: var(--orange); }
 .badge.yellow { background: var(--gold); color: #000; }
-.bounty-reward { font-family: var(--book-font); font-size: 3rem; color: var(--green); font-weight: bold; margin: 10px 0; text-shadow: 0 0 20px rgba(46, 204, 113, 0.3); border: none !important; }
+.bounty-reward { font-family: var(--book-font); font-size: 3.2rem; color: var(--green); font-weight: bold; margin: 10px 0; text-shadow: 0 0 20px rgba(46, 204, 113, 0.3); border: none !important; }
 .status-text { font-family: var(--sans-font); font-style: italic; color: #bbb; border: none !important; }
 .p-critical { border-left-color: var(--red); }
 .p-high { border-left-color: var(--orange); }
 .p-medium { border-left-color: var(--gold); }
 
-/* INSTAGRAM REAL EMBEDS */
+/* INSTAGRAM EMBEDS */
 .ig-gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-top: 20px; }
-.ig-embed-wrapper { background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.6); padding: 10px; filter: url(#watercolor); }
-.ig-embed-wrapper iframe { width: 100%; height: 500px; border: none; border-radius: 4px; display: block; }
+.ig-embed-wrapper { background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.6); padding: 12px; filter: url(#watercolor); }
+.ig-embed-wrapper iframe { width: 100%; height: 500px; border: none; border-radius: 6px; display: block; }
 
 /* SVG ICONS FOR OFFICIAL LOGOS */
 .contact-block { max-width: 650px; margin: 0 auto; text-align: center; }
 .contact-list { list-style: none; padding: 0; margin: 0; display: inline-block; text-align: left;}
-.contact-list li { display: flex; align-items: center; margin-bottom: 25px; font-size: 1.4rem; }
-.svg-icon-wrap { width: 45px; height: 45px; margin-right: 20px; border-radius: 10px; display: flex; justify-content: center; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.5); filter: url(#watercolor); transition: transform 0.3s;}
-.svg-icon-wrap:hover { transform: scale(1.1); }
+.contact-list li { display: flex; align-items: center; margin-bottom: 25px; font-size: 1.5rem; }
+.svg-icon-wrap { width: 50px; height: 50px; margin-right: 25px; border-radius: 12px; display: flex; justify-content: center; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.5); filter: url(#watercolor); transition: transform 0.3s;}
+.svg-icon-wrap:hover { transform: scale(1.15); }
 .ig-grad { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%); }
 .ln-color { background: #0077b5; }
 .gh-color { background: #333; }
 .bc-color { background: #f36f21; }
 
 a { color: var(--gold); text-decoration: none; transition: all 0.2s; font-weight: bold; }
-a:hover { color: #fff; text-shadow: 0 0 10px rgba(241,196,15,0.8); letter-spacing: 0.5px; }
+a:hover { color: #fff; text-shadow: 0 0 12px rgba(241,196,15,0.8); letter-spacing: 0.5px; }
 
-#flight-instructions { position: fixed; bottom: 20px; width: 100vw; text-align: center; font-family: var(--sans-font); font-size: 1.1rem; color: rgba(255,255,255,0.8); pointer-events: none; text-shadow: 2px 2px 5px #000; display: none; line-height: 1.8; font-weight: bold; }
-.nav-arrow { color: var(--gold); font-weight: 900; }
-
+/* EFEK JET PESAWAT */
 #player { position: fixed; top: 0; left: 0; z-index: 9999; will-change: transform; pointer-events: none; }
-#engine-exhaust { position: absolute; top: 50%; left: -20px; width: 30px; height: 10px; background: linear-gradient(to right, transparent, #e74c3c, #f1c40f, #fff); border-radius: 5px; transform: translateY(-50%); opacity: 0; transition: opacity 0.2s; filter: blur(2px); }
+#engine-exhaust { position: absolute; top: 50%; left: -25px; width: 35px; height: 12px; background: linear-gradient(to right, transparent, #e74c3c, #f1c40f, #fff); border-radius: 6px; transform: translateY(-50%); opacity: 0; transition: opacity 0.2s; filter: blur(2px); }
