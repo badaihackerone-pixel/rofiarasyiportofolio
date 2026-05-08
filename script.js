@@ -6,14 +6,16 @@ const contentContainer = document.getElementById('content-container');
 const sky = document.getElementById('sky');
 const ground = document.getElementById('ground');
 const planets = document.querySelectorAll('.planet');
-const surfaceHud = document.getElementById('surface-hud');
+
+const guideTop = document.getElementById('surface-guide-top');
+const guideBottom = document.getElementById('surface-guide-bottom');
 
 let currentState = 'SPACE';
 
 let x = window.innerWidth / 2;
 let y = window.innerHeight - 150; 
 let vx = 0; let vy = 0;
-const speed = 1.0; const friction = 0.91; 
+const speed = 0.95; const friction = 0.92; 
 
 let collisionImmunity = 60;
 
@@ -38,8 +40,6 @@ window.addEventListener('keydown', e => {
     if(document.getElementById('key-' + key)) {
         document.getElementById('key-' + key).classList.add('active');
     }
-
-    if(e.key === 'Escape' && currentState === 'SURFACE') takeOffToSpace();
 });
 
 window.addEventListener('keyup', e => { 
@@ -66,11 +66,14 @@ function gameLoop() {
     else exhaust.style.opacity = '0';
 
     if (x < 0) { x = 0; vx = 0; }
-    if (x > window.innerWidth - 70) { x = window.innerWidth - 70; vx = 0; }
+    if (x > window.innerWidth - 75) { x = window.innerWidth - 75; vx = 0; }
     
     if (currentState === 'SPACE') {
         if (y < 0) { y = 0; vy = 0; }
-        if (y > window.innerHeight - 70) { y = window.innerHeight - 70; vy = 0; }
+        if (y > window.innerHeight - 75) { y = window.innerHeight - 75; vy = 0; }
+        
+        guideTop.style.display = 'none';
+        guideBottom.style.display = 'none';
 
         if (collisionImmunity > 0) {
             collisionImmunity--;
@@ -79,15 +82,13 @@ function gameLoop() {
         }
 
     } else if (currentState === 'SURFACE') {
-        
         const scrollSpeedMultiplier = 2.5;
 
-        // Fading HUD berdasarkan posisi scroll
-        if (surfaceView.scrollTop > 100) {
-            surfaceHud.style.opacity = '0';
-        } else {
-            surfaceHud.style.opacity = '1';
-        }
+        const isAtTop = surfaceView.scrollTop === 0;
+        const isAtBottom = surfaceView.scrollHeight - surfaceView.scrollTop <= surfaceView.clientHeight + 10;
+
+        if (isAtTop) guideTop.style.display = 'block'; else guideTop.style.display = 'none';
+        if (!isAtBottom) guideBottom.style.display = 'block'; else guideBottom.style.display = 'none';
 
         if (y > window.innerHeight - 120) { 
             y = window.innerHeight - 120;
@@ -96,13 +97,13 @@ function gameLoop() {
             }
         }
         
-        if (y < 80) {
-            y = 80;
+        if (y < 100) {
+            y = 100;
             if (vy < 0) {
                 if (surfaceView.scrollTop > 0) {
                     surfaceView.scrollBy({ top: vy * scrollSpeedMultiplier, behavior: 'auto' });
                 } else {
-                    if (y <= 80 && vy < -1.5) {
+                    if (y <= 100 && vy < -1.5) {
                         takeOffToSpace();
                     }
                 }
@@ -117,7 +118,7 @@ function gameLoop() {
 }
 
 function checkPlanetCollision() {
-    const px = x + 35; const py = y + 35; 
+    const px = x + 37.5; const py = y + 37.5; 
     
     planets.forEach(planet => {
         const rect = planet.getBoundingClientRect();
@@ -135,7 +136,6 @@ function checkPlanetCollision() {
 function landOnPlanet(planet) {
     currentState = 'SURFACE';
     surfaceView.scrollTop = 0;
-    surfaceHud.style.opacity = '1';
     
     contentContainer.innerHTML = document.getElementById(planet.getAttribute('data-id')).innerHTML;
     
