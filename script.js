@@ -9,17 +9,17 @@ const planets = document.querySelectorAll('.planet');
 let currentState = 'SPACE';
 
 let x = window.innerWidth / 2;
-let y = window.innerHeight - 100; 
+let y = window.innerHeight - 120; 
 let vx = 0; let vy = 0;
-const speed = 0.7; const friction = 0.93; 
+const speed = 0.8; const friction = 0.92; 
 
-let collisionImmunity = 120; 
+let collisionImmunity = 120;
 
 const planetData = {
-    'p-home': { ground: '#d35400', sky: 'linear-gradient(to bottom, #1a252c, #f1c40f)' },
-    'p-bounty': { ground: '#641e16', sky: 'linear-gradient(to bottom, #111, #e74c3c)' },
-    'p-medfo': { ground: '#0b5345', sky: 'linear-gradient(to bottom, #042e27, #2ecc71)' },
-    'p-contact': { ground: '#873600', sky: 'linear-gradient(to bottom, #1a1a1a, #e67e22)' }
+    'p-home': { ground: '#a04000', sky: 'linear-gradient(to bottom, #152238, #d35400, #f1c40f)' },
+    'p-bounty': { ground: '#4a2311', sky: 'linear-gradient(to bottom, #0a0a0a, #7b241c, #c0392b)' },
+    'p-medfo': { ground: '#0b5345', sky: 'linear-gradient(to bottom, #021a12, #145a32, #2ecc71)' },
+    'p-contact': { ground: '#6e2c00', sky: 'linear-gradient(to bottom, #1a1005, #a04000, #e67e22)' }
 };
 
 const keys = { w: false, a: false, s: false, d: false };
@@ -50,13 +50,13 @@ function gameLoop() {
     x += vx; y += vy;
 
     if (x < 0) { x = 0; vx = 0; }
-    if (x > window.innerWidth - 55) { x = window.innerWidth - 55; vx = 0; }
-    if (y > window.innerHeight - 55) { y = window.innerHeight - 55; vy = 0; }
+    if (x > window.innerWidth - 60) { x = window.innerWidth - 60; vx = 0; }
+    if (y > window.innerHeight - 60) { y = window.innerHeight - 60; vy = 0; }
     
     if (currentState === 'SPACE') {
         if (y < 0) { y = 0; vy = 0; } 
     } else if (currentState === 'SURFACE') {
-        if (y < 10) { 
+        if (y < 15) { 
             takeOffToSpace(); 
         }
     }
@@ -76,18 +76,18 @@ function gameLoop() {
 }
 
 function checkPlanetCollision() {
-    const px = x + 27.5; const py = y + 27.5; 
+    const px = x + 30; const py = y + 30; 
     
     planets.forEach(planet => {
         const rect = planet.getBoundingClientRect();
         const cx = rect.left + (rect.width / 2);
         const cy = rect.top + (rect.height / 2);
         
-        if (Math.hypot(cx - px, cy - py) < 65) {
+        if (Math.hypot(cx - px, cy - py) < 80) {
             landOnPlanet(planet);
             
             vx = -vx * 2; vy = -vy * 2;
-            x += vx * 6; y += vy * 6;
+            x += vx * 8; y += vy * 8;
         }
     });
 }
@@ -114,10 +114,10 @@ function takeOffToSpace() {
     collisionImmunity = 60; 
     
     vx = 0; 
-    vy = -6; 
+    vy = -8; 
     
     x = window.innerWidth / 2;
-    y = window.innerHeight - 100;
+    y = window.innerHeight - 150;
     
     surfaceView.classList.remove('active');
     spaceView.classList.add('active');
