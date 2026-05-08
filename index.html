@@ -7,73 +7,75 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <svg width="0" height="0" style="position:absolute;z-index:-1;">
-        <filter id="watercolor" x="-20%" y="-20%" width="140%" height="140%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="4" result="noise" />
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G" />
-        </filter>
-        <filter id="paper-texture">
-            <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="5" result="noise" />
-            <feColorMatrix type="matrix" values="1 0 0 0 0  0 0.98 0 0 0  0 0.94 0 0 0  0 0 0 0.3 0" in="noise" result="coloredNoise" />
-            <feBlend in="SourceGraphic" in2="coloredNoise" mode="multiply" />
-        </filter>
-    </svg>
-
     <div id="space-view" class="view active">
         <div id="stars-layer-1" class="starfield"></div>
         <div id="stars-layer-2" class="starfield"></div>
         <div id="stars-layer-3" class="starfield"></div>
         
+        <!-- Planet 1: B-612 -->
         <div class="planet p-float-1" id="p-home" style="top: 15%; left: 15%;" data-id="page-home">
             <div class="crater c1"></div><div class="crater c2"></div>
+            <div class="baobab b1"></div><div class="baobab b2"></div>
             <div class="rose-container">
                 <div class="glass-dome"></div>
                 <div class="rose-flower"></div>
+                <div class="rose-leaf"></div>
             </div>
             <span class="label">Asteroid B-612</span>
             <div class="atmosphere-glow"></div>
         </div>
         
+        <!-- Planet 2: The King -->
         <div class="planet p-float-2" id="p-bounty" style="top: 65%; left: 20%;" data-id="page-bounty">
-            <div class="css-crown"></div>
+            <div class="css-ermine-cape"></div>
+            <div class="css-crown">
+                <div class="jewel"></div>
+            </div>
             <span class="label">The King</span>
             <div class="atmosphere-glow"></div>
         </div>
         
+        <!-- Planet 3: Lamplighter -->
         <div class="planet p-float-3" id="p-medfo" style="top: 20%; left: 75%;" data-id="page-medfo">
+            <div class="crater c3"></div>
             <div class="css-lamp">
                 <div class="lamp-head"></div>
                 <div class="lamp-post"></div>
+                <div class="lamp-base"></div>
                 <div class="lamp-light"></div>
             </div>
             <span class="label">Lamplighter</span>
             <div class="atmosphere-glow"></div>
         </div>
 
+        <!-- Planet 4: The Fox -->
         <div class="planet p-float-1" id="p-contact" style="top: 70%; left: 70%;" data-id="page-contact">
             <div class="css-fox">
+                <div class="fox-tail"></div>
                 <div class="fox-ear left"></div>
                 <div class="fox-ear right"></div>
-                <div class="fox-face"></div>
+                <div class="fox-face"><div class="fox-nose"></div></div>
             </div>
             <span class="label">The Fox</span>
             <div class="atmosphere-glow"></div>
         </div>
     </div>
 
+    <!-- SURFACE VIEW -->
     <div id="surface-view" class="view">
         <div id="sky"></div>
-        <div id="stars-surface" class="starfield" style="opacity: 0.3;"></div>
+        <div id="stars-surface" class="starfield" style="opacity: 0.4;"></div>
         
         <div id="clouds-container">
-            <div class="cloud" style="top: 8%; width: 150px; height: 35px; animation-duration: 45s; opacity: 0.8;"></div>
-            <div class="cloud" style="top: 25%; width: 220px; height: 50px; animation-duration: 60s; animation-delay: -15s; opacity: 0.6;"></div>
-            <div class="cloud" style="top: 15%; width: 110px; height: 25px; animation-duration: 35s; animation-delay: -5s; opacity: 0.7;"></div>
-            <div class="cloud" style="top: 35%; width: 180px; height: 40px; animation-duration: 50s; animation-delay: -25s; opacity: 0.5;"></div>
-            <div class="cloud" style="top: 5%; width: 250px; height: 60px; animation-duration: 70s; animation-delay: -40s; opacity: 0.4;"></div>
+            <div class="cloud" style="top: 8%; width: 180px; height: 40px; animation-duration: 45s; opacity: 0.8;"></div>
+            <div class="cloud" style="top: 25%; width: 250px; height: 55px; animation-duration: 60s; animation-delay: -15s; opacity: 0.6;"></div>
+            <div class="cloud" style="top: 15%; width: 120px; height: 30px; animation-duration: 35s; animation-delay: -5s; opacity: 0.7;"></div>
+            <div class="cloud" style="top: 45%; width: 200px; height: 45px; animation-duration: 50s; animation-delay: -25s; opacity: 0.5;"></div>
         </div>
 
         <div id="ground">
+            <div class="mountain m1"></div>
+            <div class="mountain m2"></div>
             <div class="dune d1"></div>
             <div class="dune d2"></div>
             <div class="dune d3"></div>
@@ -82,23 +84,27 @@
         <button id="btn-emergency-exit" onclick="takeOffToSpace()">[ESC] Lepas Landas</button>
 
         <div id="content-container"></div>
-        <div id="escape-hint">↑ Terbang menembus batas langit untuk kembali ↑</div>
+        <div id="escape-hint">↑ Terbang ke atas layar untuk kembali ke angkasa ↑</div>
     </div>
 
+    <!-- PLAYER (Fixed Position to avoid scroll disappearance) -->
     <div id="player">
-        <svg viewBox="0 0 100 100" width="60" height="60">
-            <g filter="drop-shadow(2px 5px 3px rgba(0,0,0,0.5))">
+        <svg viewBox="0 0 100 100" width="65" height="65">
+            <g filter="drop-shadow(3px 8px 4px rgba(0,0,0,0.6))">
                 <rect x="15" y="32" width="70" height="6" rx="3" fill="#f1c40f"/>
                 <path d="M30 32 L70 32 L75 68 L50 85 L25 68 Z" fill="#c0392b"/>
                 <rect x="20" y="58" width="60" height="6" rx="3" fill="#f1c40f"/>
                 <path d="M45 32 L50 20 L55 32 Z" fill="#e67e22"/>
                 <circle cx="50" cy="50" r="12" fill="#2c3e50"/>
-                <path d="M40 50 Q50 40 60 50" stroke="#ecf0f1" stroke-width="2" fill="none" opacity="0.5"/>
-                <ellipse cx="50" cy="12" rx="35" ry="4" fill="#ecf0f1" opacity="0.8"/>
+                <path d="M38 50 Q50 38 62 50" stroke="#ecf0f1" stroke-width="2" fill="none" opacity="0.6"/>
+                <ellipse cx="50" cy="12" rx="35" ry="4" fill="#ecf0f1" opacity="0.9"/>
+                <line x1="25" y1="38" x2="25" y2="58" stroke="#333" stroke-width="2"/>
+                <line x1="75" y1="38" x2="75" y2="58" stroke="#333" stroke-width="2"/>
             </g>
         </svg>
     </div>
 
+    <!-- TEMPLATES -->
     <template id="page-home">
         <div class="layout-split">
             <div class="text-content">
@@ -121,6 +127,7 @@
                     <div class="css-photo-placeholder"></div>
                 </div>
                 <div class="photo-caption">Rofi Arasyi</div>
+                <div class="photo-tape"></div>
             </div>
         </div>
     </template>
@@ -137,6 +144,7 @@
                     <span class="badge red">P1</span>
                 </div>
                 <p class="bounty-reward">$3,000</p>
+                <div class="status-bar"><div class="status-fill red" style="width: 100%;"></div></div>
                 <p class="status-text">Status: Unresolved</p>
             </div>
             <div class="data-block p-high">
@@ -145,6 +153,7 @@
                     <span class="badge orange">P2</span>
                 </div>
                 <p class="bounty-reward">$1,200</p>
+                <div class="status-bar"><div class="status-fill green" style="width: 100%;"></div></div>
                 <p class="status-text">Status: Resolved</p>
             </div>
             <div class="data-block p-medium">
@@ -153,6 +162,7 @@
                     <span class="badge yellow">P4</span>
                 </div>
                 <p class="bounty-reward">$150</p>
+                <div class="status-bar"><div class="status-fill yellow" style="width: 100%;"></div></div>
                 <p class="status-text">Status: Unresolved</p>
             </div>
         </div>
@@ -163,18 +173,66 @@
         <div class="narrative-text">
             <p>Saya juga bergabung pada Himpunan Mahasiswa Teknik Elektro (HMTE) sebagai Staf Departemen Media dan Informasi (Medfo). Peran saya melibatkan perancangan strategi komunikasi visual, manajemen aset digital, dan pemeliharaan jalur informasi agar aktivitas himpunan dapat terdistribusi dengan baik ke seluruh pemangku kepentingan.</p>
         </div>
-        <div class="ig-gallery-grid">
-            <div class="ig-embed-wrapper">
-                <iframe src="https://www.instagram.com/p/DXqywCLEk7b/embed" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+        <div class="css-gallery-grid">
+            <!-- IG Card 1 -->
+            <div class="ig-card">
+                <div class="ig-header">
+                    <div class="ig-avatar"></div>
+                    <div class="ig-user-info">
+                        <span class="ig-username">hmte_unpad</span>
+                        <span class="ig-location">Universitas Padjadjaran</span>
+                    </div>
+                </div>
+                <div class="ig-media art-1">
+                    <div class="geometric-shape s1"></div>
+                    <div class="geometric-shape s2"></div>
+                </div>
+                <div class="ig-actions">
+                    <div class="action-icon heart"></div>
+                    <div class="action-icon comment"></div>
+                    <div class="action-icon share"></div>
+                </div>
+                <div class="ig-caption"><strong>hmte_unpad</strong> Observasi Visual 01. Eksplorasi gelombang dan sinyal.</div>
             </div>
-            <div class="ig-embed-wrapper">
-                <iframe src="https://www.instagram.com/p/DW34wLymD07/embed" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+            <!-- IG Card 2 -->
+            <div class="ig-card">
+                <div class="ig-header">
+                    <div class="ig-avatar"></div>
+                    <div class="ig-user-info">
+                        <span class="ig-username">hmte_unpad</span>
+                        <span class="ig-location">Departemen Medfo</span>
+                    </div>
+                </div>
+                <div class="ig-media art-2">
+                    <div class="circuit-line l1"></div>
+                    <div class="circuit-line l2"></div>
+                </div>
+                <div class="ig-actions">
+                    <div class="action-icon heart"></div>
+                    <div class="action-icon comment"></div>
+                    <div class="action-icon share"></div>
+                </div>
+                <div class="ig-caption"><strong>hmte_unpad</strong> Observasi Visual 02. Rangkaian logika digital.</div>
             </div>
-            <div class="ig-embed-wrapper">
-                <iframe src="https://www.instagram.com/p/DWyXcHfmLI4/embed" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
-            </div>
-            <div class="ig-embed-wrapper">
-                <iframe src="https://www.instagram.com/p/DV3Cp7Ckm78/embed" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+            <!-- IG Card 3 -->
+            <div class="ig-card">
+                <div class="ig-header">
+                    <div class="ig-avatar"></div>
+                    <div class="ig-user-info">
+                        <span class="ig-username">hmte_unpad</span>
+                        <span class="ig-location">Jatinangor</span>
+                    </div>
+                </div>
+                <div class="ig-media art-3">
+                    <div class="wave-circle w1"></div>
+                    <div class="wave-circle w2"></div>
+                </div>
+                <div class="ig-actions">
+                    <div class="action-icon heart"></div>
+                    <div class="action-icon comment"></div>
+                    <div class="action-icon share"></div>
+                </div>
+                <div class="ig-caption"><strong>hmte_unpad</strong> Observasi Visual 03. Frekuensi dan resonansi.</div>
             </div>
         </div>
     </template>
@@ -185,19 +243,19 @@
         <div class="data-block contact-block">
             <ul class="contact-list">
                 <li>
-                    <span class="icon-css ig-icon"></span>
+                    <div class="icon-wrap ig-grad"><span class="icon-inner"></span></div>
                     <a href="https://instagram.com/rofiarasyi" target="_blank">@rofiarasyi</a>
                 </li>
                 <li>
-                    <span class="icon-css ln-icon"></span>
+                    <div class="icon-wrap ln-grad"><span class="icon-inner"></span></div>
                     <a href="https://www.linkedin.com/in/rofiarasyi/" target="_blank">Rofi Arasyi</a>
                 </li>
                 <li>
-                    <span class="icon-css gh-icon"></span>
+                    <div class="icon-wrap gh-grad"><span class="icon-inner"></span></div>
                     <a href="https://github.com/badaihackerone-pixel" target="_blank">badaihackerone-pixel</a>
                 </li>
                 <li>
-                    <span class="icon-css bc-icon"></span>
+                    <div class="icon-wrap bc-grad"><span class="icon-inner"></span></div>
                     <a href="https://bugcrowd.com/h/Badai" target="_blank">Badai</a>
                 </li>
             </ul>
