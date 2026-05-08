@@ -1,93 +1,130 @@
-/* portofolio */
-.text-portofolio {
-    color: black;
-    font-size: 75px;
-    font-family: 'Oswald', sans-serif;
-    font-weight: 400;
-    word-wrap: break-word;
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Nunito:wght@400;700&display=swap');
+
+:root {
+    --space-bg: #090a0f;
+    --text-color: #fcf8e3;
+    --book-font: 'Lora', serif;
+    --sans-font: 'Nunito', sans-serif;
 }
 
-/* ROFI ARASYI */
-.text-nama-utama {
-    color: black;
-    font-size: 120px;
-    font-family: 'Oswald', sans-serif;
-    font-weight: 700;
-    word-wrap: break-word;
+body {
+    margin: 0; overflow: hidden;
+    background-color: var(--space-bg);
+    color: var(--text-color);
+    font-family: var(--sans-font);
 }
 
-/* Dibuat untuk tugas mata pelajaran Pemrograman 2 */
-.text-tugas {
-    color: black;
-    font-size: 29.30px;
-    font-family: 'Oswald', sans-serif;
-    font-weight: 300;
-    line-height: 29.30px;
-    word-wrap: break-word;
+.view {
+    position: absolute; width: 100vw; height: 100vh;
+    opacity: 0; pointer-events: none;
+    transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.view.active { opacity: 1; pointer-events: auto; }
+
+.starfield {
+    position: absolute; width: 100%; height: 100%; z-index: 0;
+    background-image: 
+        radial-gradient(1px 1px at 10% 20%, white 100%, transparent),
+        radial-gradient(1.5px 1.5px at 30% 40%, rgba(255,255,255,0.8) 100%, transparent),
+        radial-gradient(2px 2px at 70% 60%, rgba(255,255,255,0.6) 100%, transparent),
+        radial-gradient(1px 1px at 80% 10%, white 100%, transparent),
+        radial-gradient(1.5px 1.5px at 50% 80%, rgba(255,255,255,0.9) 100%, transparent);
+    background-size: 250px 250px;
+}
+#stars-layer-2 { background-size: 350px 350px; opacity: 0.5; transform: rotate(45deg); }
+
+@keyframes float1 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+@keyframes float2 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(12px); } }
+@keyframes drift { from { transform: translateX(-20vw); } to { transform: translateX(120vw); } }
+
+.p-float-1 { animation: float1 7s ease-in-out infinite; }
+.p-float-2 { animation: float2 6s ease-in-out infinite; }
+.p-float-3 { animation: float1 8s ease-in-out infinite reverse; }
+
+.planet {
+    position: absolute; width: 130px; height: 130px; border-radius: 50%;
+    box-shadow: inset -20px -20px 40px rgba(0,0,0,0.7), 0 0 15px rgba(255,255,255,0.1);
+    display: flex; justify-content: center; align-items: center;
+    cursor: pointer; transition: transform 0.3s;
+    filter: url(#watercolor); z-index: 5;
+}
+.planet:hover { filter: url(#watercolor) brightness(1.15); transform: scale(1.05); }
+
+#p-home { background: radial-gradient(circle at 35% 35%, #e6c229, #d35400, #873600); }
+#p-bounty { background: radial-gradient(circle at 35% 35%, #c0392b, #7b241c, #4a2311); }
+#p-medfo { background: radial-gradient(circle at 35% 35%, #27ae60, #145a32, #0e4524); }
+#p-contact { background: radial-gradient(circle at 35% 35%, #d35400, #873600, #512000); }
+
+.crater { position: absolute; border-radius: 50%; background: rgba(0,0,0,0.2); box-shadow: inset 2px 2px 5px rgba(0,0,0,0.4); }
+.c1 { width: 30px; height: 30px; top: 20px; left: 20px; }
+.c2 { width: 15px; height: 15px; bottom: 30px; right: 25px; }
+.c3 { width: 45px; height: 45px; top: 35px; left: 35px; }
+.rose { position: absolute; width: 12px; height: 12px; background: #e74c3c; border-radius: 50%; top: -5px; border: 2px solid rgba(255,255,255,0.5); }
+.ring { position: absolute; width: 180px; height: 30px; border: 6px solid rgba(255,255,255,0.3); border-radius: 50%; transform: rotate(15deg); pointer-events: none; }
+.fox-ears { position: absolute; top: -12px; width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-bottom: 20px solid #d35400; }
+
+.label {
+    position: absolute; bottom: -35px; font-family: var(--book-font);
+    font-size: 1rem; color: #fff; text-shadow: 2px 2px 4px #000; white-space: nowrap;
 }
 
-/* Halo! Saya adalah mahasiswa Teknik Elektro UNPAD... */
-.text-bio {
-    color: white;
-    font-size: 29.30px;
-    font-family: 'Oswald', sans-serif;
-    font-weight: 300;
-    line-height: 29.30px;
-    letter-spacing: 1.46px;
-    word-wrap: break-word;
+#sky { position: absolute; width: 100%; height: 70%; top: 0; transition: background 1.5s ease; z-index: 1; }
+#ground {
+    position: absolute; width: 200vw; height: 100vh; left: -50vw; bottom: -60vh;
+    border-radius: 50%; box-shadow: inset 0 60px 100px rgba(0,0,0,0.6); transition: background 1.5s ease;
+    z-index: 2; overflow: hidden;
 }
 
-/* ROFI ARASYI<br/> */
-.text-nama-sekunder {
-    color: white;
-    font-size: 18.31px;
-    font-family: 'Oswald', sans-serif;
-    font-weight: 700;
-    line-height: 18.31px;
-    letter-spacing: 0.92px;
-    word-wrap: break-word;
+.dune { position: absolute; background: rgba(0,0,0,0.1); border-radius: 50%; }
+.d1 { width: 800px; height: 400px; top: -100px; left: 20vw; }
+.d2 { width: 600px; height: 300px; top: -50px; right: 10vw; }
+
+.cloud { position: absolute; background: rgba(255,255,255,0.15); border-radius: 50px; filter: blur(3px); animation-name: drift; animation-timing-function: linear; animation-iteration-count: infinite; z-index: 1; }
+
+#btn-emergency-exit {
+    position: absolute; top: 20px; right: 20px; z-index: 50;
+    background: rgba(0,0,0,0.5); color: #fff; border: 1px solid rgba(255,255,255,0.4);
+    padding: 10px 15px; border-radius: 5px; font-family: var(--sans-font); cursor: pointer;
+    transition: all 0.3s;
+}
+#btn-emergency-exit:hover { background: #f1c40f; color: #000; border-color: #f1c40f; }
+
+#content-container {
+    position: absolute; top: 10%; left: 50%; transform: translateX(-50%);
+    width: 85%; max-width: 850px; z-index: 10;
 }
 
-/* 140910250067<br/> */
-.text-npm {
-    color: white;
-    font-size: 18.31px;
-    font-family: 'Oswald', sans-serif;
-    font-weight: 300;
-    line-height: 18.31px;
-    letter-spacing: 0.92px;
-    word-wrap: break-word;
-}
+h1 { font-family: var(--book-font); font-size: 3rem; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px; margin-bottom: 15px; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); }
+.quote { font-family: var(--book-font); font-style: italic; color: #f1c40f; font-size: 1.3rem; margin-bottom: 25px; }
 
-/* JAKARTA */
-.text-kota {
-    color: white;
-    font-size: 18.31px;
-    font-family: 'Oswald', sans-serif;
-    font-weight: 500;
-    line-height: 18.31px;
-    letter-spacing: 0.92px;
-    word-wrap: break-word;
+.data-block { 
+    background: rgba(10,10,10,0.5); padding: 25px; margin-bottom: 15px; 
+    border-radius: 8px; border-left: 5px solid #f1c40f; backdrop-filter: blur(5px); 
+    filter: url(#watercolor); line-height: 1.6;
 }
+.grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 
-/* , 08 JANUARI 2007<br/> */
-.text-tanggal {
-    color: white;
-    font-size: 18.31px;
-    font-family: 'Oswald', sans-serif;
-    font-weight: 300;
-    line-height: 18.31px;
-    letter-spacing: 0.92px;
-    word-wrap: break-word;
-}
+.bounty-reward { font-family: var(--book-font); font-size: 2rem; color: #27ae60; font-weight: bold; margin: 10px 0; }
+.p-critical { border-left-color: #e74c3c; }
+.p-high { border-left-color: #e67e22; }
 
-/* CAKUNG, JAKARTA TIMUR */
-.text-alamat {
-    color: white;
-    font-size: 18.31px;
-    font-family: 'Oswald', sans-serif;
-    font-weight: 500;
-    line-height: 18.31px;
-    letter-spacing: 0.92px;
-    word-wrap: break-word;
+.gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+.gallery-item { position: relative; border-radius: 8px; overflow: hidden; display: block; filter: url(#watercolor); border: 2px solid rgba(255,255,255,0.2); }
+.gallery-item img { width: 100%; display: block; transition: transform 0.3s; }
+.gallery-item .overlay {
+    position: absolute; bottom: 0; background: rgba(0,0,0,0.8); width: 100%;
+    padding: 10px; box-sizing: border-box; color: #f1c40f; text-align: center;
+    font-family: var(--book-font); font-size: 0.9rem; transform: translateY(100%); transition: transform 0.3s;
 }
+.gallery-item:hover img { transform: scale(1.1); }
+.gallery-item:hover .overlay { transform: translateY(0); }
+
+.contact-list { list-style: none; padding: 0; }
+.contact-list li { margin-bottom: 15px; }
+a { color: #f1c40f; text-decoration: none; font-weight: bold; font-size: 1.1rem; transition: color 0.2s;}
+a:hover { color: #fff; text-decoration: underline; }
+
+#escape-hint { position: absolute; top: 15px; width: 100%; text-align: center; font-weight: bold; color: rgba(255,255,255,0.6); z-index: 10; animation: pulse 2.5s infinite; pointer-events: none; }
+@keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+#player { position: absolute; top: 0; left: 0; z-index: 100; will-change: transform; }
