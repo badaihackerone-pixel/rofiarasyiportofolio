@@ -11,7 +11,6 @@
     --green: #2ecc71;
 }
 
-/* KERTAS CAT AIR OVERLAY DENGAN BLEND MULTIPLY */
 body::before {
     content: ""; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
@@ -29,10 +28,8 @@ body {
 }
 .view.active { opacity: 1; pointer-events: auto; }
 
-/* KUNCI SCROLL MURNI OLEH PESAWAT */
 #surface-view { overflow: hidden; }
 
-/* PATCH JUDUL DI TENGAH */
 #main-title-container {
     position: absolute; top: 8%; left: 50%; transform: translateX(-50%);
     text-align: center; pointer-events: none; z-index: 10;
@@ -50,7 +47,6 @@ body {
     margin: 0 0 5px 0; letter-spacing: 6px; text-transform: uppercase; font-weight: 900;
 }
 
-/* LINGKUNGAN BINTANG & NEBULA */
 .nebula { position: fixed; width: 100vw; height: 100vh; background: radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.05), transparent 40%), radial-gradient(circle at 20% 80%, rgba(155, 89, 182, 0.05), transparent 40%); z-index: 0; pointer-events: none; }
 .starfield {
     position: fixed; width: 100vw; height: 100vh; z-index: 0; pointer-events: none;
@@ -81,7 +77,6 @@ body {
 .d3 { width: 5px; height: 5px; top: 50%; left: 80%; animation-duration: 15s; }
 @keyframes floatAsteroid { 0% { transform: rotate(0deg) translate(0, 0); } 50% { transform: rotate(180deg) translate(30px, -30px); } 100% { transform: rotate(360deg) translate(0, 0); } }
 
-/* UI GUIDE LUAR ANGKASA */
 #flight-guide {
     position: absolute; top: 25px; right: 25px; background: rgba(10,10,15,0.7); padding: 25px;
     border-radius: 12px; border: 1px solid rgba(241,196,15,0.3); backdrop-filter: blur(8px);
@@ -94,7 +89,6 @@ body {
 .key.active { background: var(--gold); color: #000; border-color: var(--gold); transform: scale(0.9) translateY(2px); box-shadow: 0 0 15px rgba(241,196,15,0.6), inset 0 0 0 rgba(0,0,0,0); }
 #flight-guide p { margin: 0; font-size: 0.9rem; color: #ddd; line-height: 1.6; }
 
-/* ANIMASI PLANET */
 @keyframes float1 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 @keyframes float2 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(12px); } }
 @keyframes float3 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
@@ -103,7 +97,6 @@ body {
 .p-float-2 { animation: float2 7s ease-in-out infinite; }
 .p-float-3 { animation: float3 9s ease-in-out infinite reverse; }
 
-/* DESAIN PLANET */
 .planet {
     position: absolute; width: 170px; height: 170px; border-radius: 50%;
     box-shadow: inset -30px -30px 40px rgba(0,0,0,0.8), inset 15px 15px 30px rgba(255,255,255,0.3), 0 0 50px rgba(0,0,0,0.5);
@@ -146,7 +139,6 @@ body {
 
 .label { position: absolute; bottom: -50px; font-family: var(--book-font); font-size: 1.25rem; color: #fff; text-shadow: 2px 2px 10px rgba(0,0,0,0.9); white-space: nowrap; letter-spacing: 1.5px; }
 
-/* LINGKUNGAN PERMUKAAN (ATMOSFER PLANET) */
 #sky { position: fixed; width: 100vw; height: 100vh; top: 0; transition: background 2s ease; z-index: 1; pointer-events: none; }
 #ground { position: fixed; width: 250vw; height: 100vh; left: -75vw; bottom: -65vh; border-radius: 50%; box-shadow: inset 0 100px 200px rgba(0,0,0,0.9); transition: background 2s ease; z-index: 2; pointer-events: none; }
 
@@ -165,7 +157,6 @@ body {
 .cloud::after { width: 40%; height: 120%; top: -30%; right: 20%; }
 @keyframes drift { from { transform: translateX(-30vw); } to { transform: translateX(130vw); } }
 
-/* UI GUIDE DI DALAM PLANET */
 .surface-guide {
     position: fixed; width: 100vw; text-align: center; font-family: var(--sans-font);
     font-size: 1.15rem; color: rgba(255,255,255,0.9); pointer-events: none;
@@ -181,7 +172,6 @@ body {
 
 #content-container { position: relative; top: 12vh; left: 50%; transform: translateX(-50%); width: 90%; max-width: 950px; z-index: 10; padding-bottom: 50px; margin-top: 30px;}
 
-/* TIPOGRAFI & LAYOUT */
 h1 { font-family: var(--book-font); font-size: 4.5rem; border-bottom: 2px solid rgba(255,255,255,0.2); padding-bottom: 8px; margin-bottom: 15px; text-shadow: 3px 5px 15px rgba(0,0,0,0.8); }
 .quote { font-family: var(--book-font); font-style: italic; color: var(--gold); font-size: 1.6rem; margin-bottom: 35px; text-shadow: 1px 2px 5px rgba(0,0,0,0.8); }
 
@@ -213,12 +203,10 @@ h1 { font-family: var(--book-font); font-size: 4.5rem; border-bottom: 2px solid 
 .p-high { border-left-color: var(--orange); }
 .p-medium { border-left-color: var(--gold); }
 
-/* INSTAGRAM EMBEDDING */
 .ig-gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 35px; margin-top: 20px; }
 .ig-embed-wrapper { background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.7); padding: 12px; filter: url(#watercolor); }
 .ig-embed-wrapper iframe { width: 100%; height: 520px; border: none; border-radius: 6px; display: block; }
 
-/* SVG ICONS FOR LOGOS */
 .contact-block { max-width: 700px; margin: 0 auto; text-align: center; }
 .contact-list { list-style: none; padding: 0; margin: 0; display: inline-block; text-align: left;}
 .contact-list li { display: flex; align-items: center; margin-bottom: 30px; font-size: 1.5rem; }
@@ -232,10 +220,8 @@ h1 { font-family: var(--book-font); font-size: 4.5rem; border-bottom: 2px solid 
 a { color: var(--gold); text-decoration: none; transition: all 0.2s; font-weight: bold; }
 a:hover { color: #fff; text-shadow: 0 0 15px rgba(241,196,15,0.9); letter-spacing: 1px; }
 
-/* PLAYER & EXHAUST ALIGNMENT */
 #player { position: fixed; top: 0; left: 0; z-index: 9999; will-change: transform; pointer-events: none; }
 
-/* PATCH: EXHAUST DI EKOR BAWAH SVG */
 #engine-exhaust {
     position: absolute; top: 72px; left: 50%; width: 14px; height: 35px;
     background: linear-gradient(to bottom, rgba(255,255,255,0.8), #f1c40f, #e74c3c, transparent);
@@ -243,7 +229,6 @@ a:hover { color: #fff; text-shadow: 0 0 15px rgba(241,196,15,0.9); letter-spacin
     transition: opacity 0.2s; filter: blur(3px); z-index: 1;
 }
 
-/* BIPLANE ANIMATIONS */
 .propeller { transform-origin: 50px 15px; animation: spinProp 0.05s linear infinite; }
 @keyframes spinProp { 100% { transform: rotate(360deg); } }
 .scarf-wave { transform-origin: 50px 50px; animation: waveScarf 0.3s ease-in-out infinite alternate; }
