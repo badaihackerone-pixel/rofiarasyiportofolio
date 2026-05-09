@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Engine Tekstur Kanvas & Cat Air (GPU Optimized) -->
     <svg width="0" height="0" style="position:absolute;z-index:-1;">
         <filter id="watercolor" x="-20%" y="-20%" width="140%" height="140%">
             <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" result="noise" />
@@ -20,9 +19,7 @@
         </filter>
     </svg>
 
-    <!-- HUB: RUANG ANGKASA -->
     <div id="space-view" class="view active">
-        <!-- Kosmos Latar Belakang -->
         <div class="nebula"></div>
         <div id="stars-layer-1" class="starfield twinkle-1"></div>
         <div id="stars-layer-2" class="starfield twinkle-2"></div>
@@ -32,7 +29,6 @@
         <div class="shooting-star" style="top: 25%; right: -10%; animation-delay: 5s;"></div>
         <div class="debris d1"></div><div class="debris d2"></div><div class="debris d3"></div>
 
-        <!-- PATCH: Container Pembungkus Titik Tengah Judul -->
         <div id="main-title-container">
             <div id="main-title">
                 <h2 class="sub">Catatan Eksplorasi Sistem</h2>
@@ -53,7 +49,6 @@
             <p>Pilot, gunakan <strong>W, A, S, D</strong><br>Hampiri planet untuk mendarat.</p>
         </div>
 
-        <!-- Tata Surya B-612 -->
         <div class="planet p-float-1" id="p-home" style="top: 22%; left: 15%;" data-id="page-home">
             <div class="orbit-ring"></div>
             <div class="crater c1"></div><div class="crater c2"></div>
@@ -96,7 +91,6 @@
         </div>
     </div>
 
-    <!-- HUB: PERMUKAAN ATMOSFER PLANET -->
     <div id="surface-view" class="view">
         <div id="sky"></div>
         <div id="stars-surface" class="starfield" style="opacity: 0.25;"></div>
@@ -126,31 +120,20 @@
         <div id="content-container"></div>
     </div>
 
-    <!-- ENTITAS PESAWAT GLOBAL -->
     <div id="player">
-        <!-- PATCH: Exhaust diposisikan tepat di ekor -->
         <div id="engine-exhaust"></div>
         <svg viewBox="0 0 100 100" width="75" height="75" style="position:relative; z-index:2; overflow:visible;">
-            <!-- Desain Biplane Eksklusif Estetika Buku -->
             <g filter="drop-shadow(4px 12px 6px rgba(0,0,0,0.8))">
-                <!-- Ekor Kemudi -->
                 <rect x="35" y="80" width="30" height="6" rx="3" fill="#e74c3c"/>
                 <rect x="47" y="75" width="6" height="15" rx="2" fill="#c0392b"/>
-                <!-- Syal Beterbangan (Referensing The Little Prince) -->
                 <path d="M 50 50 Q 65 70 55 95" stroke="#f1c40f" stroke-width="4" fill="none" class="scarf-wave"/>
-                <!-- Sayap Belakang -->
                 <rect x="20" y="45" width="60" height="8" rx="4" fill="#d35400"/>
-                <!-- Badan Pesawat -->
                 <path d="M 45 15 L 55 15 L 52 85 L 48 85 Z" fill="#e67e22"/>
-                <!-- Sayap Depan -->
                 <rect x="10" y="30" width="80" height="10" rx="5" fill="#f1c40f"/>
-                <!-- Tiang Sayap -->
                 <line x1="25" y1="35" x2="25" y2="49" stroke="#333" stroke-width="3"/>
                 <line x1="75" y1="35" x2="75" y2="49" stroke="#333" stroke-width="3"/>
-                <!-- Kokpit -->
                 <circle cx="50" cy="45" r="8" fill="#2c3e50"/>
                 <path d="M 42 45 Q 50 33 58 45" stroke="#ecf0f1" stroke-width="2.5" fill="none"/>
-                <!-- Hidung Pesawat & Baling-baling -->
                 <circle cx="50" cy="15" r="5" fill="#95a5a6"/>
                 <g class="propeller">
                     <ellipse cx="50" cy="15" rx="38" ry="3" fill="#ecf0f1" opacity="0.85"/>
@@ -159,7 +142,6 @@
         </svg>
     </div>
 
-    <!-- DATABASE KONTEN HALAMAN -->
     <template id="page-home">
         <div class="layout-split">
             <div class="text-content">
