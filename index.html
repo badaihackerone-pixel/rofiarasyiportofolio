@@ -1,264 +1,923 @@
-<!DOCTYPE html>
-<html lang="id">
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portofolio // Rofi Arasyi</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Who's Rofi? — Rofi Arasyi</title>
+<meta name="description" content="Rofi Arasyi's rented room. Click around to meet a security researcher who also does visual design, Electrical Engineering at Unpad.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=VT323&display=swap" rel="stylesheet">
+<style>
+/* ---------- token ---------- */
+:root{
+  --bg:#EEF1F3;          /* kertas biru-abu, pagi */
+  --ink:#1D2530;
+  --muted:#5B6470;
+  --line:rgba(29,37,48,.12);
+  --panel:#FFFFFF;
+  --accent:#F2B23C;      /* cahaya lampu belajar = petunjuk */
+  --accent-ink:#6B4600;
+  --found:#3E9B6B;
+  /* preset font: judul / teks / label. Ganti tiga baris ini kalau mau coba pasangan lain */
+  --serif:"Pixelify Sans",system-ui,sans-serif;   /* judul & nama benda (nama variabel dipertahankan) */
+  --sans:"VT323",ui-monospace,monospace;           /* teks isi, font pixel yang masih enak dibaca */
+  --mono:"Pixelify Sans",ui-monospace,monospace;   /* label, penghitung, laporan */
+}
+body.night{
+  --bg:#141A21;
+  --ink:#E9ECEF;
+  --muted:#9AA4B0;
+  --line:rgba(233,236,239,.14);
+  --panel:#1C232C;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--sans);font-size:19px;line-height:1.35;
+  transition:background .6s ease,color .6s ease;
+  overflow-x:hidden;
+}
+a{color:inherit}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+.serif{font-family:var(--serif)}
+
+/* ---------- header ---------- */
+header{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:16px;
+  padding:22px 28px 0;max-width:1180px;margin:0 auto;
+}
+.brand h1{
+  font-family:var(--serif);font-weight:700;font-style:normal;letter-spacing:0;
+  font-size:clamp(28px,4vw,40px);line-height:1.05;margin:2px 0 6px;letter-spacing:-.01em;
+}
+.brand .sub{margin:0;color:var(--muted);font-size:18px}
+.brand .mono{color:var(--muted)}
+.hud{display:flex;flex-direction:column;align-items:flex-end;gap:6px;padding-top:6px}
+.dots{display:flex;gap:6px}
+.dots i{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--muted);display:block;transition:all .3s}
+.dots i.on{background:var(--found);border-color:var(--found)}
+#count{color:var(--muted);transition:color .3s}
+#count.done{color:var(--found)}
+
+/* ---------- stage ---------- */
+main{max-width:1180px;margin:0 auto;padding:6px 16px 120px}
+#stage{position:relative;width:100%;max-width:820px;margin:0 auto}
+#room{width:100%;height:auto;display:block;overflow:visible}
+.scene{transition:filter .8s ease}
+body.night .scene{filter:brightness(.52) saturate(.8)}
+body.gelap .scene{filter:brightness(.3) saturate(.7)}
+.swOff{opacity:0}
+body.gelap .swOn{opacity:0}
+body.gelap .swOff{opacity:1}
+.spark{opacity:0}
+@keyframes zapk{0%,100%{opacity:0}30%{opacity:1}60%{opacity:0}80%{opacity:1}}
+.zap .spark{animation:zapk .5s steps(1,end)}
+.night-only{opacity:0;transition:opacity .8s}
+body.night .night-only{opacity:1}
+
+.obj{cursor:pointer;outline:none;transition:filter .2s;pointer-events:visiblePainted}
+.obj [fill="none"]{pointer-events:stroke}
+.obj:hover{filter:brightness(1.05) drop-shadow(0 2px 3px rgba(0,0,0,.14))}
+.obj:focus-visible{filter:drop-shadow(0 0 4px var(--accent)) drop-shadow(0 0 1px var(--accent))}
+
+/* penanda petunjuk */
+.mk{pointer-events:none}
+.mk .ring{fill:none;stroke:var(--accent);stroke-width:1.5;opacity:.7;transform-box:fill-box;transform-origin:center}
+.mk .dot{fill:var(--accent);stroke:#fff;stroke-width:1.5}
+.jk .jv{opacity:0;transition:opacity .3s}
+.jk[data-view="0"] .jv0,.jk[data-view="1"] .jv1,.jk[data-view="2"] .jv2,.jk[data-view="3"] .jv3{opacity:1}
+.jadwal{width:100%;border-collapse:collapse;font-size:17px;margin:8px 0 12px}
+.jadwal td{padding:7px 6px;border-top:2px solid var(--line);vertical-align:top}
+.jadwal td:first-child{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);width:64px}
+.jadwal tr.today td{background:rgba(242,178,60,.14)}
+.photo{width:132px;aspect-ratio:4/5;border:1px dashed var(--line);border-radius:10px;display:grid;place-items:center;text-align:center;color:var(--muted);font-family:var(--mono);font-size:11px;padding:8px;margin:4px 0 12px}
+.photo img{width:100%;height:100%;object-fit:cover;border-radius:9px}
+.mk .tick{fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:0}
+.mk.found .ring{opacity:0;animation:none}
+.mk.found .dot{fill:var(--found)}
+.mk.found .tick{opacity:1}
+@keyframes pulse{0%{transform:scale(.6);opacity:.9}100%{transform:scale(2.2);opacity:0}}
+@media (prefers-reduced-motion:no-preference){.mk .ring{animation:pulse 1.8s ease-out infinite}}
+
+/* kipas & kucing */
+.gY{opacity:.28}
+@keyframes oscA{0%,100%{opacity:1}50%{opacity:.28}}
+@keyframes oscB{0%,100%{opacity:.28}50%{opacity:1}}
+.spin .gX{animation:oscA 5s ease-in-out infinite}
+.spin .gY{animation:oscB 5s ease-in-out infinite}
+.wind line{opacity:0;transform-box:fill-box;transform-origin:center}
+@keyframes gust{0%{transform:translate(0,0);opacity:0}20%{opacity:.7}100%{transform:translate(26px,15px);opacity:0}}
+.spin .wind line{animation:gust 1.5s linear infinite}
+.fanled{fill:#8F8B84}.spin .fanled{fill:#F2B23C}
+#cat .pawup,#cat .pawdown-r{transition:opacity .15s}
+#cat .pawdown-r{opacity:0}
+#cat.salute .pawdown-r{opacity:1}
+#cat.salute .pawup{opacity:0}
+@media (prefers-reduced-motion:reduce){.spin .gY,.spin .gX,.spin .wind line{animation:none}}
+
+/* animasi klik per benda */
+.obj{transform-box:fill-box;transform-origin:50% 50%}
+@keyframes a-knock{0%,100%{transform:none}20%{transform:scale(.985)}40%{transform:none}60%{transform:scale(.985)}}
+@keyframes a-flash{0%,100%{filter:brightness(1)}30%{filter:brightness(1.7)}}
+@keyframes a-wobble{0%,100%{transform:rotate(0)}25%{transform:rotate(2.5deg)}75%{transform:rotate(-2deg)}}
+@keyframes a-swing{0%{transform:rotate(0)}20%{transform:rotate(7deg)}50%{transform:rotate(-5deg)}75%{transform:rotate(3deg)}100%{transform:rotate(0)}}
+@keyframes a-tilt{0%,100%{transform:rotate(0)}30%{transform:rotate(-3deg)}65%{transform:rotate(2deg)}}
+@keyframes a-tug{0%,100%{transform:scale(1)}40%{transform:scale(1.02,.95)}70%{transform:scale(.99,1.02)}}
+@keyframes a-lid{0%,100%{transform:rotate(0)}20%{transform:rotate(-8deg)}45%{transform:rotate(6deg)}70%{transform:rotate(-3deg)}}
+@keyframes a-shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-2px)}40%{transform:translateX(2px)}60%{transform:translateX(-1.5px)}80%{transform:translateX(1.5px)}}
+@keyframes a-flicker{0%,100%{opacity:1}20%{opacity:.35}35%{opacity:1}55%{opacity:.6}70%{opacity:1}}
+@keyframes a-rattle{0%,100%{transform:translate(0,0)}25%{transform:translate(1px,-1.5px)}50%{transform:translate(-1px,1px)}75%{transform:translate(1px,1px)}}
+@keyframes a-jitter{0%,100%{transform:translateX(0)}25%{transform:translateX(-1.5px)}50%{transform:translateX(1.5px)}75%{transform:translateX(-1px)}}
+@keyframes a-bounce{0%,100%{transform:translateY(0)}30%{transform:translateY(-7px)}55%{transform:translateY(0)}75%{transform:translateY(-2px)}}
+@keyframes a-sink{0%,100%{transform:scaleY(1)}40%{transform:scaleY(.955)}70%{transform:scaleY(1.01)}}
+@keyframes a-strum{0%,100%{transform:rotate(0)}20%{transform:rotate(1.5deg)}40%{transform:rotate(-1.5deg)}60%{transform:rotate(1deg)}80%{transform:rotate(-1deg)}}
+@keyframes a-rock{0%,100%{transform:rotate(0)}30%{transform:rotate(-3deg)}60%{transform:rotate(2deg)}}
+@keyframes a-pop{0%,100%{transform:scale(1)}30%{transform:scale(1.04)}}
+@keyframes a-flip{0%,100%{transform:scaleX(1)}50%{transform:scaleX(.88)}}
+@keyframes a-clink{0%,100%{transform:rotate(0)}30%{transform:rotate(-4deg) translateY(-1px)}60%{transform:rotate(3deg)}}
+@keyframes a-tick{0%,100%{transform:rotate(0)}30%{transform:rotate(2.5deg)}60%{transform:rotate(-2.5deg)}}
+@keyframes a-smoke{0%{opacity:.75;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-16px) scale(1.15)}}
+.an-clink{transform-origin:50% 100%;animation:a-clink .5s ease}
+.an-tick{animation:a-tick .6s ease}
+.smoke{opacity:0;transform-box:fill-box;transform-origin:50% 100%}
+.puff .smoke{animation:a-smoke 1.7s ease-out}
+@keyframes a-cetek{0%,100%{transform:translateY(0)}50%{transform:translateY(1.5px)}}
+@keyframes a-zap{0%,100%{filter:brightness(1)}30%{filter:brightness(2.2)}}
+.an-cetek{animation:a-cetek .25s steps(2)}
+.an-zap{animation:a-zap .5s steps(3)}
+@keyframes a-locked{0%,100%{transform:translateX(0)}15%{transform:translateX(-1.5px)}30%{transform:translateX(1.5px)}45%{transform:translateX(-1px)}60%{transform:translateX(1px)}}
+.an-knock{animation:a-knock .5s ease}
+.an-flash{animation:a-flash .6s ease}
+.an-wobble{transform-origin:50% 0%;animation:a-wobble .7s ease}
+.an-swing{transform-origin:50% 0%;animation:a-swing 1.2s ease}
+.an-tilt{transform-origin:50% 0%;animation:a-tilt .8s ease}
+.an-tug{animation:a-tug .6s ease}
+.an-lid{transform-origin:50% 100%;animation:a-lid .7s ease}
+.an-shake{animation:a-shake .4s ease}
+.an-flicker{animation:a-flicker .6s steps(1,end)}
+.an-rattle{animation:a-rattle .35s ease 2}
+.an-jitter{animation:a-jitter .25s ease 2}
+.an-bounce{animation:a-bounce .7s cubic-bezier(.3,1.4,.5,1)}
+.an-sink{transform-origin:50% 100%;animation:a-sink .6s ease}
+.an-strum{transform-origin:50% 100%;animation:a-strum .5s ease}
+.playing{transform-origin:50% 100%;animation:a-strum .5s ease infinite}
+.an-rock{transform-origin:50% 100%;animation:a-rock .7s ease}
+.an-pop{transform-origin:50% 100%;animation:a-pop .4s ease}
+.an-flip{animation:a-flip .35s ease}
+.an-locked{animation:a-locked .35s ease}
+@media (prefers-reduced-motion:reduce){[class*="an-"]{animation:none!important}}
+#mute{border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:4px 10px;cursor:pointer;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+#mute:hover{color:var(--ink);border-color:var(--ink)}
+
+/* ---------- gaya blocky untuk seluruh UI ---------- */
+*,*::before,*::after{border-radius:0!important}
+.hud .dots i{width:11px;height:11px;border:2px solid var(--muted)}
+.dots i.on{background:var(--found);border-color:var(--found)}
+#mute{border:2px solid var(--ink);color:var(--ink);box-shadow:3px 3px 0 var(--ink);padding:5px 10px 3px;transition:transform .1s steps(2),box-shadow .1s steps(2)}
+#mute:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 var(--ink)}
+#mute:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+.mk .ring{transform-box:fill-box;transform-origin:center}
+.thumbs figure,.photo{border:2px dashed var(--muted)}
+.cover{box-shadow:4px 4px 0 rgba(0,0,0,.28);border:2px solid rgba(0,0,0,.25)}
+.redact{height:.75em}
+
+/* ---------- gelembung kucing ---------- */
+#bubble{
+  position:fixed;left:24px;bottom:28px;max-width:360px;
+  background:var(--panel);border:2px solid var(--ink);
+  padding:12px 16px 10px;box-shadow:5px 5px 0 var(--ink);
+  transition:transform .3s,opacity .3s,background .6s;z-index:5;
+}
+#bubble::before{content:'';position:absolute;left:18px;bottom:-9px;width:9px;height:9px;background:var(--panel);border-right:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+#bubble::after{content:'';position:absolute;left:14px;bottom:-16px;width:7px;height:7px;background:var(--panel);border-right:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+#bubble .mono{color:var(--muted);display:block;margin-bottom:2px}
+#bubble p{margin:0;font-size:19px;line-height:1.3}
+
+/* ---------- panel petunjuk ---------- */
+#backdrop{position:fixed;inset:0;background:rgba(20,26,33,.28);opacity:0;pointer-events:none;transition:opacity .2s steps(3);z-index:8}
+#backdrop.on{opacity:1;pointer-events:auto}
+#panel{
+  position:fixed;top:0;right:0;height:100%;width:min(420px,100%);
+  background:var(--panel);border-left:3px solid var(--ink);
+  transform:translateX(102%);transition:transform .3s steps(6),background .6s;
+  z-index:9;overflow-y:auto;padding:28px 28px 40px;
+}
+#panel.on{transform:translateX(0)}
+#panel .close{
+  position:absolute;top:14px;right:14px;width:34px;height:34px;
+  border:2px solid var(--ink);background:var(--panel);color:var(--ink);cursor:pointer;font-size:16px;box-shadow:3px 3px 0 var(--ink);
+}
+#panel .close:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 var(--ink)}
+#panel .tag{color:var(--accent-ink);background:var(--accent);display:inline-block;padding:4px 8px 2px;border:2px solid var(--accent-ink)}
+body.night #panel .tag{color:var(--accent)}
+#panel h2{font-family:var(--serif);font-weight:700;font-size:26px;line-height:1.15;margin:14px 0 12px}
+#panel p{margin:0 0 12px;color:var(--ink)}
+#panel .muted{color:var(--muted)}
+#panel .report{border:2px solid var(--ink);padding:12px 14px;margin:14px 0;font-family:var(--mono);font-size:12px;line-height:1.9;color:var(--muted);box-shadow:4px 4px 0 var(--ink)}
+#panel .report b{color:var(--ink);font-weight:500}
+.redact{display:inline-block;height:.85em;width:6ch;background:var(--ink);border-radius:2px;vertical-align:-1px;opacity:.85}
+.redact.s{width:3.5ch}.redact.l{width:9ch}
+#panel .links{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:8px}
+#panel .links a{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  text-decoration:none;border:2px solid var(--ink);padding:10px 12px;box-shadow:3px 3px 0 var(--ink);transition:transform .1s steps(2),box-shadow .1s steps(2)
+}
+#panel .links a:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 var(--ink)}
+#panel .links .mono{color:var(--muted)}
+.thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.thumbs figure{margin:0;aspect-ratio:4/5;border:1px dashed var(--line);border-radius:8px;display:grid;place-items:center;color:var(--muted);font-family:var(--mono);font-size:11px;text-align:center;padding:6px;overflow:hidden}
+.thumbs img{width:100%;height:100%;object-fit:cover;border-radius:7px}
+#panel .cat{margin:16px 0 4px}
+.covers{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 14px}
+.cover{width:74px;aspect-ratio:2/3;border-radius:3px;padding:8px 7px;color:#F4F1EA;font-size:10px;line-height:1.15;display:flex;flex-direction:column;justify-content:space-between;box-shadow:inset -3px 0 0 rgba(0,0,0,.18)}
+.cover b{font-family:var(--serif);font-size:12px;font-weight:600}
+.cover span{opacity:.85}
+#panel .cat svg{width:80px;height:80px;image-rendering:pixelated}
+
+/* ---------- toast ---------- */
+#toast{
+  position:fixed;left:50%;bottom:32px;transform:translate(-50%,20px);opacity:0;
+  background:var(--ink);color:var(--bg);padding:10px 16px 8px;font-size:18px;border:2px solid var(--bg);box-shadow:4px 4px 0 var(--muted);
+  transition:all .2s steps(4);pointer-events:none;z-index:10
+}
+#toast.on{transform:translate(-50%,0);opacity:1}
+
+/* ---------- mobile ---------- */
+@media (max-width:640px){
+  header{flex-direction:column;padding:18px 18px 0}
+  .hud{flex-direction:row;align-items:center;gap:12px;padding-top:0}
+  main{padding-bottom:150px}
+  #bubble{left:12px;right:12px;max-width:none;bottom:12px}
+  #panel{top:auto;bottom:0;height:min(78vh,720px);width:100%;border-left:0;border-top:3px solid var(--ink);
+    transform:translateY(105%);padding:22px 20px 40px}
+  #panel.on{transform:translateY(0)}
+}
+</style>
 </head>
 <body>
-    <svg width="0" height="0" style="position:absolute;z-index:-1;">
-        <filter id="watercolor" x="-20%" y="-20%" width="140%" height="140%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" result="noise" />
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G" />
-        </filter>
-        <filter id="paper-texture">
-            <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="4" result="noise" />
-            <feColorMatrix type="matrix" values="1 0 0 0 0  0 0.96 0 0 0  0 0.92 0 0 0  0 0 0 0.3 0" in="noise" result="coloredNoise" />
-            <feBlend in="SourceGraphic" in2="coloredNoise" mode="multiply" />
-        </filter>
-    </svg>
 
-    <div id="space-view" class="view active">
-        <div class="nebula"></div>
-        <div id="stars-layer-1" class="starfield twinkle-1"></div>
-        <div id="stars-layer-2" class="starfield twinkle-2"></div>
-        <div id="stars-layer-3" class="starfield twinkle-3"></div>
-        
-        <div class="shooting-star"></div>
-        <div class="shooting-star" style="top: 25%; right: -10%; animation-delay: 5s;"></div>
-        <div class="debris d1"></div><div class="debris d2"></div><div class="debris d3"></div>
+<header>
+  <div class="brand">
+    <span class="mono">rofi arasyi · portfolio</span>
+    <h1>This is my room.</h1>
+    <p class="sub">Click stuff. Four things in here say something about me.</p>
+  </div>
+  <div class="hud" aria-live="polite">
+    <div class="dots" id="dots"><i></i><i></i><i></i><i></i></div>
+    <span id="count" class="mono">Found 0/4</span>
+  </div>
+</header>
 
-        <div id="main-title-container">
-            <div id="main-title">
-                <h2 class="sub">Catatan Eksplorasi Sistem</h2>
-                <h1>Portofolio Rofi Arasyi</h1>
-            </div>
-        </div>
+<main>
+  <div id="stage">
+    <svg id="room" viewBox="0 0 760 700" role="img" aria-label="Rofi's rented room, isometric view. Things inside can be clicked."></svg>
+  </div>
+</main>
 
-        <div id="flight-guide">
-            <h3>PANDUAN NAVIGASI</h3>
-            <div class="keyboard-layout">
-                <div class="key-row"><div class="key" id="key-w">W</div></div>
-                <div class="key-row">
-                    <div class="key" id="key-a">A</div>
-                    <div class="key" id="key-s">S</div>
-                    <div class="key" id="key-d">D</div>
-                </div>
-            </div>
-            <p>Pilot, gunakan <strong>W, A, S, D</strong><br>Hampiri planet untuk mendarat.</p>
-        </div>
+<div id="bubble" role="status">
+  <span class="mono">Cat</span>
+  <p id="bubbleText">Hi. Four things in here are worth a click. Start with whatever's blinking.</p>
+</div>
 
-        <div class="planet p-float-1" id="p-home" style="top: 22%; left: 15%;" data-id="page-home">
-            <div class="orbit-ring"></div>
-            <div class="crater c1"></div><div class="crater c2"></div>
-            <div class="rose-container">
-                <div class="glass-dome"></div>
-                <div class="rose-flower"></div>
-                <div class="rose-sparkle"></div>
-            </div>
-            <span class="label">Asteroid B-612</span>
-            <div class="atmosphere-glow"></div>
-        </div>
-        
-        <div class="planet p-float-2" id="p-bounty" style="top: 70%; left: 22%;" data-id="page-bounty">
-            <div class="orbit-ring"></div>
-            <div class="css-crown"></div>
-            <span class="label">The King</span>
-            <div class="atmosphere-glow"></div>
-        </div>
-        
-        <div class="planet p-float-3" id="p-medfo" style="top: 25%; left: 78%;" data-id="page-medfo">
-            <div class="orbit-ring"></div>
-            <div class="css-lamp">
-                <div class="lamp-head"></div>
-                <div class="lamp-post"></div>
-                <div class="lamp-light"></div>
-            </div>
-            <span class="label">Lamplighter</span>
-            <div class="atmosphere-glow"></div>
-        </div>
+<div id="backdrop"></div>
+<aside id="panel" aria-hidden="true">
+  <button class="close" aria-label="Close">✕</button>
+  <div id="panelBody"></div>
+</aside>
+<div id="toast" role="status"></div>
 
-        <div class="planet p-float-1" id="p-contact" style="top: 75%; left: 72%;" data-id="page-contact">
-            <div class="orbit-ring"></div>
-            <div class="css-fox">
-                <div class="fox-ear left"></div>
-                <div class="fox-ear right"></div>
-                <div class="fox-face"></div>
-            </div>
-            <span class="label">The Fox</span>
-            <div class="atmosphere-glow"></div>
-        </div>
-    </div>
+<script>
+/* =====================================================================
+   1) PROYEKSI ISOMETRIK
+   Titik (x,y,z) di dunia kamar (satuan ~ 30 cm) → koordinat layar.
+   Persis prinsip plugin isometrik di Figma: tiga bidang, tiga gradasi,
+   ditambah garis tepi, gradasi halus, dan bayangan supaya lebih "3D".
+   ===================================================================== */
+const U=36, OX=380, OY=354, C30=0.8660254;
+const P=(x,y,z)=>[OX+(x-y)*C30*U, OY+(x+y)*0.5*U-z*U];
+const pts=a=>a.map(p=>P(...p).map(n=>n.toFixed(1)).join(',')).join(' ');
+function shade(hex,amt){
+  const n=parseInt(hex.slice(1),16);let r=n>>16,g=(n>>8)&255,b=n&255;
+  const t=amt<0?0:255,a=Math.abs(amt);
+  r=Math.round(r+(t-r)*a);g=Math.round(g+(t-g)*a);b=Math.round(b+(t-b)*a);
+  return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+}
+const poly=(a,fill,extra='')=>`<polygon points="${pts(a)}" fill="${fill}" ${extra}/>`;
+const EDGE=c=>`stroke="${shade(c,-.55)}" stroke-opacity=".5" stroke-width=".7" stroke-linejoin="round"`;
+/* kotak = bidang atas (terang), kiri (sedang), kanan (gelap) + gradasi + tepi */
+function box(x,y,z,w,d,h,c){
+  const top=[[x,y,z+h],[x+w,y,z+h],[x+w,y+d,z+h],[x,y+d,z+h]];
+  const left=[[x,y+d,z],[x+w,y+d,z],[x+w,y+d,z+h],[x,y+d,z+h]];
+  const right=[[x+w,y,z],[x+w,y+d,z],[x+w,y+d,z+h],[x+w,y,z+h]];
+  const e=EDGE(c);
+  return poly(left,c,e)+poly(left,'url(#gv)')+poly(right,shade(c,-.32),e)+poly(right,'url(#gv)')+poly(top,shade(c,.28),e)+poly(top,'url(#gt)');
+}
+/* bayangan lembut di lantai (cahaya dari kiri-atas) */
+const sh=(x,y,w,d,h)=>{const xr=Math.min(x+w+.32*h,W),yr=Math.min(y+d+.12*h,D);return poly([[x+.05,y+.05,.005],[xr,y+.05,.005],[xr,yr,.005],[x+.05,yr,.005]],'rgba(70,52,30,.13)','pointer-events="none"');};
+/* bidang di dinding kiri (x=0) dan dinding kanan (y=0) */
+const onLeft=(y1,y2,z1,z2,fill,extra='')=>poly([[0.02,y1,z1],[0.02,y2,z1],[0.02,y2,z2],[0.02,y1,z2]],fill,extra);
+const onRight=(x1,x2,z1,z2,fill,extra='')=>poly([[x1,0.02,z1],[x2,0.02,z1],[x2,0.02,z2],[x1,0.02,z2]],fill,extra);
+const flat=(x,y,w,d,fill,extra='')=>poly([[x,y,0.01],[x+w,y,0.01],[x+w,y+d,0.01],[x,y+d,0.01]],fill,extra);
+/* silinder tegak: badan + tutup atas (rice cooker, panci, kaleng, tempat sampah) */
+function cyl(x,y,z,r,h,c){
+  const [cx,cb]=P(x,y,z),[,ct]=P(x,y,z+h);const rx=r*C30*U*1.41421,ry=r*0.5*U*1.41421;
+  const body=`<path d="M${(cx-rx).toFixed(1)} ${ct.toFixed(1)}V${cb.toFixed(1)}A${rx.toFixed(1)} ${ry.toFixed(1)} 0 0 0 ${(cx+rx).toFixed(1)} ${cb.toFixed(1)}V${ct.toFixed(1)}Z" fill="${c}" ${EDGE(c)}/>`;
+  const grad=`<path d="M${(cx-rx).toFixed(1)} ${ct.toFixed(1)}V${cb.toFixed(1)}A${rx.toFixed(1)} ${ry.toFixed(1)} 0 0 0 ${(cx+rx).toFixed(1)} ${cb.toFixed(1)}V${ct.toFixed(1)}Z" fill="url(#gh)"/>`;
+  const top=`<ellipse cx="${cx.toFixed(1)}" cy="${ct.toFixed(1)}" rx="${rx.toFixed(1)}" ry="${ry.toFixed(1)}" fill="${shade(c,.28)}" ${EDGE(c)}/>`;
+  return body+grad+top;
+}
+/* transformasi ke bidang tegak sejajar dinding kanan (y tetap): dipakai untuk teks/gambar 2D di permukaan benda */
+const planeY=(x0,y0,z0)=>{const [X0,Y0]=P(x0,y0,z0);return `matrix(${(C30*U).toFixed(3)} ${(0.5*U).toFixed(3)} 0 ${U} ${X0.toFixed(1)} ${Y0.toFixed(1)})`;};
+/* transformasi ke bidang datar (z tetap), misalnya sampul buku teratas */
+const planeZ=(x0,y0,z0)=>{const [X0,Y0]=P(x0,y0,z0);return `matrix(${(C30*U).toFixed(3)} ${(0.5*U).toFixed(3)} ${(-C30*U).toFixed(3)} ${(0.5*U).toFixed(3)} ${X0.toFixed(1)} ${Y0.toFixed(1)})`;};
+/* tumpukan piring: cakram tipis, yang paling atas punya bibir dan cekungan */
+function plates(x,y,z,n,r=0.24){
+  let o='';for(let i=0;i<n;i++)o+=cyl(x,y,z+i*0.07,r,0.06,'#F2F1EC');
+  const [cx,cy]=P(x,y,z+n*0.07);const rx=r*0.7*C30*U*1.41421,ry=r*0.7*0.5*U*1.41421;
+  return o+`<ellipse cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" rx="${rx.toFixed(1)}" ry="${ry.toFixed(1)}" fill="#E4E2DC"/>`;
+}
+/* rak terbuka menghadap ruangan: panel belakang, papan-papan, sisi, lalu isi */
+function openShelf(x,y,w,d,h,c,items){
+  let o=poly([[x,y,0],[x,y+d,0],[x,y+d,h],[x,y,h]],shade(c,-.38));
+  o+=poly([[x,y,0],[x+w,y,0],[x+w,y,h],[x,y,h]],shade(c,-.2));
+  o+=box(x,y,0,w,d,0.05,c)+(items.bottom||'');
+  o+=box(x,y,h*0.5,w,d,0.05,c)+(items.middle||'');
+  o+=poly([[x,y+d,0],[x+w,y+d,0],[x+w,y+d,h],[x,y+d,h]],c,EDGE(c))+poly([[x,y+d,0],[x+w,y+d,0],[x+w,y+d,h],[x,y+d,h]],'url(#gv)');
+  o+=box(x,y,h,w,d,0.06,c)+(items.top||'');
+  return o;
+}
+const line=(a,b,stroke,w=1)=>{const[p,q]=[P(...a),P(...b)];return `<line x1="${p[0].toFixed(1)}" y1="${p[1].toFixed(1)}" x2="${q[0].toFixed(1)}" y2="${q[1].toFixed(1)}" stroke="${stroke}" stroke-width="${w}" stroke-linecap="round"/>`};
+const g=(id,label,inner)=>`<g class="obj" data-id="${id}" tabindex="0" role="button" aria-label="${label}"><title>${label}</title>${inner}</g>`;
+const defs=`<defs>
+<linearGradient id="gv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".18"/><stop offset="1" stop-color="#000000" stop-opacity=".13"/></linearGradient>
+<linearGradient id="gw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".10"/><stop offset="1" stop-color="#000000" stop-opacity=".07"/></linearGradient>
+<linearGradient id="gh" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffffff" stop-opacity=".26"/><stop offset=".42" stop-color="#ffffff" stop-opacity="0"/><stop offset="1" stop-color="#000000" stop-opacity=".30"/></linearGradient>
+<linearGradient id="gt" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".18"/><stop offset="1" stop-color="#000000" stop-opacity=".07"/></linearGradient>
+</defs>`;
 
-    <div id="surface-view" class="view">
-        <div id="sky"></div>
-        <div id="stars-surface" class="starfield" style="opacity: 0.25;"></div>
-        
-        <div id="clouds-container">
-            <div class="cloud" style="top: 10%; width: 200px; height: 40px; animation-duration: 40s; opacity: 0.85;"></div>
-            <div class="cloud" style="top: 28%; width: 280px; height: 55px; animation-duration: 55s; animation-delay: -20s; opacity: 0.55;"></div>
-            <div class="cloud" style="top: 15%; width: 140px; height: 30px; animation-duration: 35s; animation-delay: -10s; opacity: 0.75;"></div>
-            <div class="cloud" style="top: 42%; width: 220px; height: 45px; animation-duration: 60s; animation-delay: -30s; opacity: 0.45;"></div>
-        </div>
+/* =====================================================================
+   2) ISI KAMAR — semua balok (tanpa lingkaran/silinder), kamar kos kecil 8.6 x 8.8
+   ===================================================================== */
+const W=8.6,D=8.8,H=9.5,T=0.35,TF=0.32;
+const wallIn='#F7F7F4', wallInL='#ECEDE9', wallTop='#FBFBF9', floorC='#E7DABF', floorEdge='#CDBB9A', wood='#DDC7A6', metal='#8F8B84';
+let s='';
+/* dinding tebal + lantai tebal + lis bawah */
+s+=poly([[-T,-T,H],[0,-T,H],[0,D,H],[-T,D,H]],wallTop,'stroke="#CFCFC9" stroke-width=".7"');
+s+=poly([[0,-T,H],[W,-T,H],[W,0,H],[0,0,H]],wallTop,'stroke="#CFCFC9" stroke-width=".7"');
+s+=poly([[0,0,0],[0,D,0],[0,D,H],[0,0,H]],wallInL,'stroke="#CFCFC9" stroke-width=".7"')+poly([[0,0,0],[0,D,0],[0,D,H],[0,0,H]],'url(#gw)');
+s+=poly([[0,0,0],[W,0,0],[W,0,H],[0,0,H]],wallIn,'stroke="#CFCFC9" stroke-width=".7"')+poly([[0,0,0],[W,0,0],[W,0,H],[0,0,H]],'url(#gw)');
+s+=poly([[-T,D,0],[0,D,0],[0,D,H],[-T,D,H]],'#D7D7D1','stroke="#C4C4BE" stroke-width=".7"');
+s+=poly([[W,-T,0],[W,0,0],[W,0,H],[W,-T,H]],'#CBCBC5','stroke="#C4C4BE" stroke-width=".7"');
+s+=poly([[-T,D,-TF],[W,D,-TF],[W,D,0],[-T,D,0]],floorEdge,'stroke="#B8A585" stroke-width=".7"');
+s+=poly([[W,-T,-TF],[W,D,-TF],[W,D,0],[W,-T,0]],shade(floorEdge,-.18),'stroke="#B8A585" stroke-width=".7"');
+s+=poly([[0,0,0],[W,0,0],[W,D,0],[0,D,0]],floorC,'stroke="#D6C7A8" stroke-width="1"');
+for(let y=1;y<D;y++) s+=line([0,y,0],[W,y,0],'rgba(120,90,40,.10)');
+s+=box(0,0,0,0.06,D,0.22,'#E9E9E4')+box(0,0,0,W,0.06,0.22,'#F0F0EB');   /* lis bawah dinding */
 
-        <div id="ground">
-            <div class="dune d1"></div>
-            <div class="dune d2"></div>
-            <div class="dune d3"></div>
-            <div class="rock r1"></div><div class="rock r2"></div>
-        </div>
-        
-        <div id="surface-guide-top" class="surface-guide">
-            <span class="nav-arrow">↑</span> TERBANG MENEMBUS LANGIT UNTUK KELUAR <span class="nav-arrow">↑</span>
-        </div>
-        
-        <div id="surface-guide-bottom" class="surface-guide">
-            <span class="nav-arrow">↓</span> TERBANG KE BAWAH UNTUK SCROLL <span class="nav-arrow">↓</span>
-        </div>
+/* --- dinding kiri (x=0): pintu berpanel, saklar, jendela, cermin --- */
+s+=g('pintu','Front door: contact',
+  onLeft(0.2,1.9,0,6.7,'#DDD8CF')+onLeft(0.36,1.74,0.3,6.4,'#E6E2DA','stroke="#CFC9BE" stroke-width=".8"')+
+  onLeft(0.5,1.6,0.6,2.9,'#D9D4CB','stroke="#C6C0B5" stroke-width=".7"')+onLeft(0.5,1.6,3.5,5.9,'#D9D4CB','stroke="#C6C0B5" stroke-width=".7"')+   /* dua panel pintu */
+  box(0,0.1,0,0.1,0.12,6.8,'#CFC9BE')+box(0,1.88,0,0.1,0.12,6.8,'#CFC9BE')+box(0,0.1,6.7,0.1,1.9,0.12,'#CFC9BE')+
+  box(0,1.55,3.15,0.14,0.22,0.08,'#8F8B84'));
+s+=g('saklar','Light switch',box(0,2.06,4.4,0.05,0.16,0.18,'#F7F7F4')+`<g class="swOn">`+box(0.05,2.11,4.44,0.02,0.06,0.05,'#B9B5AD')+`</g><g class="swOff">`+box(0.05,2.11,4.5,0.02,0.06,0.05,'#B9B5AD')+`</g>`);   /* saklar lampu kamar */
+{
+  const y1=2.7,y2=4.2,z1=2.9,z2=5.3,f=0.1,d=0.12;
+  s+=g('jendela','Window',
+    box(0,y1-f,z1-f,d,y2-y1+2*f,z2-z1+2*f,'#F4F4F1')+
+    poly([[d+0.01,y1,z1],[d+0.01,y2,z1],[d+0.01,y2,z2],[d+0.01,y1,z2]],'#CDE0E7','id="kaca" style="transition:fill .6s"')+
+    poly([[d+0.01,y1,z1],[d+0.01,y2,z1],[d+0.01,y2,z2],[d+0.01,y1,z2]],'url(#gv)')+
+    poly([[d+0.01,y1,z2-0.08],[d+0.01,y2,z2-0.08],[d+0.01,y2,z2],[d+0.01,y1,z2]],'rgba(60,70,80,.18)')+
+    poly([[d+0.01,y1,z1],[d+0.01,y1+0.08,z1],[d+0.01,y1+0.08,z2],[d+0.01,y1,z2]],'rgba(60,70,80,.14)')+
+    line([d+0.02,(y1+y2)/2,z1],[d+0.02,(y1+y2)/2,z2],'#FFFFFF',2.4)+line([d+0.02,y1,(z1+z2)/2],[d+0.02,y2,(z1+z2)/2],'#FFFFFF',2.4)+
+    box(0,y1-0.16,z1-0.24,0.32,y2-y1+0.32,0.12,'#ECECE7'));
+}
+s+=g('stopkontak','Power outlet',box(0,3.32,1.2,0.05,0.18,0.16,'#F7F7F4')+box(0.05,3.36,1.25,0.02,0.03,0.05,'#B9B5AD')+box(0.05,3.43,1.25,0.02,0.03,0.05,'#B9B5AD')+
+  `<g class="spark">`+line([0.08,3.3,1.42],[0.08,3.25,1.5],'#F2B23C',1.5)+line([0.08,3.41,1.44],[0.08,3.41,1.54],'#F2B23C',1.5)+line([0.08,3.52,1.42],[0.08,3.57,1.5],'#F2B23C',1.5)+`</g>`);   /* stop kontak di bawah jendela */
+s+=g('cermin','Mirror: about Rofi',
+  box(0,5.4,3.6,0.12,1.2,2.2,'#B7AE9E')+
+  poly([[0.13,5.5,3.7],[0.13,6.5,3.7],[0.13,6.5,5.7],[0.13,5.5,5.7]],'#D2DEE2')+
+  poly([[0.13,5.5,3.7],[0.13,6.5,3.7],[0.13,6.5,5.7],[0.13,5.5,5.7]],'url(#gv)')+
+  line([0.14,5.65,5.45],[0.14,6.25,4.25],'rgba(255,255,255,.75)',3));
 
-        <div id="content-container"></div>
-    </div>
+/* --- dinding kanan (y=0): gantungan (jaket himpunan + jeans), jam kotak, cetakan, stop kontak --- */
+const wp=(pts,fill,yy=0.16,extra='')=>poly(pts.map(([x,z])=>[x,yy,z]),fill,extra||EDGE(fill));
+const hanger=cx=>line([cx,0.16,5.22],[cx,0.16,5.06],'#4A4E55',1.5)+line([cx-0.3,0.16,4.98],[cx,0.16,5.08],'#4A4E55',1.2)+line([cx,0.16,5.08],[cx+0.3,0.16,4.98],'#4A4E55',1.2);
+/* JAKET HIMPUNAN HMTE UNPAD — bolak-balik: sisi tosca (american drill) & sisi abu-abu (ripstop), hood lepas-pasang, ritsleting punggung */
+const JAKET={tosca:'#2A9A94',abu:'#7E7E7A',krem:'#E9E4D8',teksPunggung:'HMTE'};
+const jkBody=cx=>[[cx-0.4,4.98],[cx-0.16,5.02],[cx,4.98],[cx+0.16,5.02],[cx+0.4,4.98],[cx+0.56,4.62],[cx+0.56,3.72],[cx+0.34,3.72],[cx+0.3,3.55],[cx-0.3,3.55],[cx-0.34,3.72],[cx-0.56,3.72],[cx-0.56,4.62]];
+const jkHood=cx=>[[cx-0.3,4.98],[cx-0.24,5.3],[cx,5.4],[cx+0.24,5.3],[cx+0.3,4.98]];
+const jkHoodIn=cx=>[[cx-0.19,4.99],[cx-0.14,5.22],[cx,5.3],[cx+0.14,5.22],[cx+0.19,4.99]];
+const emblem=(x1,x2,z1,z2,c,c2)=>wp([[x1,z1],[x2,z1],[x2,z2],[x1,z2]],c,0.185)+wp([[x1+0.03,z1+0.03],[x2-0.03,z1+0.03],[x2-0.03,z2-0.03],[x1+0.03,z2-0.03]],c2,0.19);
+const jacketView=(cx,base,lining,isBack)=>{
+  let o=wp(jkHood(cx),shade(base,-.3),0.07)+wp(jkBody(cx),shade(base,-.3),0.08)+     /* lapisan belakang (tebal) */
+        wp(jkHood(cx),shade(base,-.08))+(isBack?'':wp(jkHoodIn(cx),lining,0.17))+       /* hood; dari depan kelihatan lapisan dalamnya */
+        wp(jkBody(cx),base)+
+        wp([[cx-0.3,3.55],[cx+0.3,3.55],[cx+0.3,3.66],[cx-0.3,3.66]],shade(base,-.18),0.17)+   /* keliman bawah */
+        wp([[cx-0.56,3.72],[cx-0.34,3.72],[cx-0.34,3.85],[cx-0.56,3.85]],shade(base,-.18),0.17)+wp([[cx+0.34,3.72],[cx+0.56,3.72],[cx+0.56,3.85],[cx+0.34,3.85]],shade(base,-.18),0.17)+   /* manset lengan panjang */
+        line([cx-0.34,0.18,4.9],[cx-0.33,0.18,3.86],shade(base,-.35),1)+line([cx+0.34,0.18,4.9],[cx+0.33,0.18,3.86],shade(base,-.35),1);   /* jahitan lengan */
+  if(!isBack){
+    o+=line([cx,0.18,4.96],[cx,0.18,3.7],'#D9D4CB',1.1)+                                       /* ritsleting */
+       line([cx-0.28,0.18,4.98],[cx-0.14,0.18,4.7],shade(base,-.35),1)+line([cx+0.28,0.18,4.98],[cx+0.14,0.18,4.7],shade(base,-.35),1)+   /* jahitan bahu */
+       emblem(cx+0.1,cx+0.24,4.46,4.62,JAKET.krem,shade(base,-.1))+                                /* emblem dada kiri (pemakai) */
+       emblem(cx+0.39,cx+0.51,4.62,4.76,JAKET.krem,shade(base,-.1));                              /* emblem lengan */
+  }else{
+    o+=line([cx,0.18,4.9],[cx,0.18,3.75],shade(base,-.35),1)+                                   /* ritsleting punggung */
+       emblem(cx-0.51,cx-0.39,4.62,4.76,JAKET.krem,shade(base,-.1));
+    if(base===JAKET.tosca) o+=`<g transform="${planeY(cx-0.19,0.19,4.62)}"><text font-family="Pixelify Sans,sans-serif" font-weight="700" font-size="0.15" fill="${JAKET.krem}">${JAKET.teksPunggung}</text></g>`;
+    else o+=emblem(cx-0.13,cx+0.13,4.52,4.82,JAKET.krem,shade(base,-.1));                          /* emblem besar di punggung sisi cokelat */
+  }
+  return o;
+};
+const jacket=cx=>`<g class="jv jv0">${jacketView(cx,JAKET.tosca,JAKET.abu,false)}</g><g class="jv jv1">${jacketView(cx,JAKET.tosca,JAKET.abu,true)}</g><g class="jv jv2">${jacketView(cx,JAKET.abu,JAKET.tosca,false)}</g><g class="jv jv3">${jacketView(cx,JAKET.abu,JAKET.tosca,true)}</g>`;
+const jeansPts=cx=>[[cx-0.25,4.98],[cx+0.25,4.98],[cx+0.25,3.45],[cx+0.05,3.45],[cx+0.05,4.2],[cx-0.05,4.2],[cx-0.05,3.45],[cx-0.25,3.45]];
+const jeans=(cx,c)=>wp(jeansPts(cx),shade(c,-.3),0.08)+wp(jeansPts(cx),c)+
+  wp([[cx-0.25,4.98],[cx+0.25,4.98],[cx+0.25,4.9],[cx-0.25,4.9]],shade(c,-.15),0.17)+          /* ban pinggang */
+  line([cx-0.24,0.18,4.86],[cx-0.14,0.18,4.7],'#8FA7C7',1)+line([cx+0.24,0.18,4.86],[cx+0.14,0.18,4.7],'#8FA7C7',1)+   /* saku */
+  line([cx-0.05,0.18,4.2],[cx-0.05,0.18,3.5],'#8FA7C7',.8)+line([cx+0.05,0.18,4.2],[cx+0.05,0.18,3.5],'#8FA7C7',.8);    /* jahitan */
+s+=g('gantungan','Hanger: jacket and jeans',
+  box(0.85,0.02,5.2,1.75,0.1,0.1,'#8F8B84')+box(0.85,0.02,5.2,0.08,0.24,0.08,'#6B6E72')+box(2.52,0.02,5.2,0.08,0.24,0.08,'#6B6E72')+
+  hanger(1.35)+jacket(1.35)+hanger(2.25)+jeans(2.25,'#3F5F8A'));
+/* jam dinding kotak di atas meja */
+{
+  const xc=3.95,zc=5.7,r=0.5;
+  let ticks='';
+  for(let i=0;i<12;i++){const t=i*Math.PI/6,big=i%3===0;ticks+=line([xc-(big?0.34:0.38)*Math.sin(t),0.14,zc+(big?0.34:0.38)*Math.cos(t)],[xc-0.42*Math.sin(t),0.14,zc+0.42*Math.cos(t)],'#4A4E55',big?1.6:1);}
+  const c=P(xc,0.15,zc);
+  s+=g('jam','Wall clock: schedule',
+    box(xc-r-0.06,0.02,zc-r-0.06,2*r+0.12,0.12,2*r+0.12,'#4A4E55')+
+    poly([[xc-r,0.145,zc-r],[xc+r,0.145,zc-r],[xc+r,0.145,zc+r],[xc-r,0.145,zc+r]],'#F7F7F4')+poly([[xc-r,0.145,zc-r],[xc+r,0.145,zc-r],[xc+r,0.145,zc+r],[xc-r,0.145,zc+r]],'url(#gt)')+ticks+
+    `<line id="hh" x1="${c[0].toFixed(1)}" y1="${c[1].toFixed(1)}" x2="${c[0].toFixed(1)}" y2="${c[1].toFixed(1)}" stroke="#2E3238" stroke-width="2.2" stroke-linecap="round"/>`+
+    `<line id="mh" x1="${c[0].toFixed(1)}" y1="${c[1].toFixed(1)}" x2="${c[0].toFixed(1)}" y2="${c[1].toFixed(1)}" stroke="#2E3238" stroke-width="1.5" stroke-linecap="round"/>`+
+    box(xc-0.04,0.15,zc-0.04,0.08,0.02,0.08,'#C94A3A'));
+  window._clock={xc,zc};
+}
+const framed=(x1,x2,z1,z2,c)=>box(x1,0,z1,x2-x1,0.07,z2-z1,'#F4F4F1')+poly([[x1+0.06,0.075,z1+0.06],[x2-0.06,0.075,z1+0.06],[x2-0.06,0.075,z2-0.06],[x1+0.06,0.075,z2-0.06]],c);
+s+=g('poster','Prints: design work',framed(5.8,6.4,4.3,5.2,'#E38B6B')+framed(6.6,7.2,4.3,5.2,'#6C9BC2')+framed(7.4,7.9,4.3,5.1,'#3E9B6B'));
+s+=g('stopkontak','Power outlet',box(5.62,0,1.45,0.18,0.05,0.16,'#F7F7F4')+box(5.66,0.05,1.5,0.03,0.02,0.05,'#B9B5AD')+box(5.73,0.05,1.5,0.03,0.02,0.05,'#B9B5AD')+
+  `<g class="spark">`+line([5.6,0.08,1.66],[5.55,0.08,1.74],'#F2B23C',1.5)+line([5.71,0.08,1.68],[5.71,0.08,1.78],'#F2B23C',1.5)+line([5.82,0.08,1.66],[5.87,0.08,1.74],'#F2B23C',1.5)+`</g>`);   /* stop kontak */
 
-    <div id="player">
-        <div id="engine-exhaust"></div>
-        <svg viewBox="0 0 100 100" width="75" height="75" style="position:relative; z-index:2; overflow:visible;">
-            <g filter="drop-shadow(4px 12px 6px rgba(0,0,0,0.8))">
-                <rect x="35" y="80" width="30" height="6" rx="3" fill="#e74c3c"/>
-                <rect x="47" y="75" width="6" height="15" rx="2" fill="#c0392b"/>
-                <path d="M 50 50 Q 65 70 55 95" stroke="#f1c40f" stroke-width="4" fill="none" class="scarf-wave"/>
-                <rect x="20" y="45" width="60" height="8" rx="4" fill="#d35400"/>
-                <path d="M 45 15 L 55 15 L 52 85 L 48 85 Z" fill="#e67e22"/>
-                <rect x="10" y="30" width="80" height="10" rx="5" fill="#f1c40f"/>
-                <line x1="25" y1="35" x2="25" y2="49" stroke="#333" stroke-width="3"/>
-                <line x1="75" y1="35" x2="75" y2="49" stroke="#333" stroke-width="3"/>
-                <circle cx="50" cy="45" r="8" fill="#2c3e50"/>
-                <path d="M 42 45 Q 50 33 58 45" stroke="#ecf0f1" stroke-width="2.5" fill="none"/>
-                <circle cx="50" cy="15" r="5" fill="#95a5a6"/>
-                <g class="propeller">
-                    <ellipse cx="50" cy="15" rx="38" ry="3" fill="#ecf0f1" opacity="0.85"/>
-                </g>
-            </g>
-        </svg>
-    </div>
+/* --- lantai --- */
+const items=[];
+const add=(k,html)=>items.push({k,html});
+s+=g('karpet','Rug',box(1.4,2.3,0,3.6,5.3,0.05,'#C9D3D9')+box(1.6,2.5,0.05,3.2,0.05,0.005,'#DDE4E8')+box(1.6,7.35,0.05,3.2,0.05,0.005,'#DDE4E8')+box(1.6,2.5,0.05,0.05,4.9,0.005,'#DDE4E8')+box(4.75,2.5,0.05,0.05,4.9,0.005,'#DDE4E8'));
 
-    <template id="page-home">
-        <div class="layout-split">
-            <div class="text-content">
-                <h1>Asteroid B-612</h1>
-                <p class="quote">"Sesuatu yang penting tidak bisa dilihat oleh mata, melainkan oleh hati."</p>
-                <div class="narrative-text">
-                    <p>Saya adalah mahasiswa Teknik Elektro di Universitas Padjadjaran. Di luar perkuliahan, saya aktif sebagai bug hunter yang berfokus mencari dan melaporkan celah keamanan pada sistem web. Saya juga tergabung dalam Departemen Media dan Informasi (Medfo) di Himpunan Mahasiswa Teknik Elektro (HMTE), di mana saya bertugas merancang desain visual dan mengelola publikasi konten untuk media sosial Instagram himpunan.</p>
-                </div>
-                <div class="data-block">
-                    <p><strong>Nama:</strong> Rofi Arasyi</p>
-                    <p><strong>Tanggal Lahir:</strong> 8 Januari 2007</p>
-                    <p><strong>Domisili:</strong> Cakung, Jakarta Timur</p>
-                    <p><strong>Pendidikan:</strong> Teknik Elektro, FMIPA UNPAD</p>
-                    <p><strong>NPM:</strong> 140910250067</p>
-                </div>
-            </div>
-            <div class="photo-frame">
-                <div class="photo-inner">
-                    <img src="foto.jpeg" alt="Rofi Arasyi" onerror="this.style.display='none'">
-                    <div class="css-photo-placeholder"></div>
-                </div>
-                <div class="photo-caption">Rofi Arasyi</div>
-            </div>
-        </div>
-        <div style="height: 350px;"></div>
-    </template>
+/* tempat sampah kotak di sudut */
+add(1.0, g('sampah','Trash can',box(0.32,0.28,0,0.42,0.42,0.96,'#6B6E72')+box(0.29,0.25,0.94,0.48,0.48,0.06,'#7C7F84')+
+  poly([[0.35,0.31,1.001],[0.71,0.31,1.001],[0.71,0.67,1.001],[0.35,0.67,1.001]],'#3E4145')));
 
-    <template id="page-bounty">
-        <h1>The King</h1>
-        <div class="narrative-text">
-            <p>Di luar kehidupan akademik, saya aktif melakukan praktik <em>Freelance Bug Bounty</em>. Sebagai peneliti keamanan independen (Bug Hunter), saya bertanggung jawab untuk menemukan, mengeksploitasi, dan melaporkan kerentanan kritis pada infrastruktur perusahaan berskala global sebelum celah tersebut dimanfaatkan oleh pihak yang tidak bertanggung jawab.</p>
-        </div>
-        <div class="grid-layout">
-            <div class="data-block p-critical">
-                <div class="bounty-header">
-                    <h3>Unity Technologies</h3>
-                    <span class="badge red">P1</span>
-                </div>
-                <p class="bounty-reward">$3,000</p>
-                <p class="status-text">Status: Unresolved</p>
-            </div>
-            <div class="data-block p-high">
-                <div class="bounty-header">
-                    <h3>Unity Technologies</h3>
-                    <span class="badge orange">P2</span>
-                </div>
-                <p class="bounty-reward">$1,200</p>
-                <p class="status-text">Status: Resolved</p>
-            </div>
-            <div class="data-block p-medium">
-                <div class="bounty-header">
-                    <h3>Unity Technologies</h3>
-                    <span class="badge yellow">P4</span>
-                </div>
-                <p class="bounty-reward">$150</p>
-                <p class="status-text">Status: Unresolved</p>
-            </div>
-        </div>
-        <div style="height: 350px;"></div>
-    </template>
+/* kipas tower kotak di depan jendela: saat menyala, kisi berpindah dari muka depan ke samping (kesan berputar kanan-kiri) dan angin berhembus */
+{
+  const fx=1.2,fy=3.9;let gY='',gX='',wind='';
+  for(let i=0;i<12;i++){gY+=line([fx-0.14,fy+0.205,0.6+i*0.24],[fx+0.14,fy+0.205,0.6+i*0.24],'#8F8B84',1.4);gX+=line([fx+0.205,fy-0.14,0.6+i*0.24],[fx+0.205,fy+0.14,0.6+i*0.24],'#8F8B84',1.4);}
+  [1.4,2.0,2.6,3.1].forEach((z,i)=>{wind+=line([fx+0.45,fy-0.1,z],[fx+0.45,fy+0.1,z+0.02],'#8FA7C7',1.6).replace('<line','<line style="animation-delay:'+(i*0.35)+'s"');});
+  add(5.1, g('kipas','Fan: on or off',
+    box(fx-0.35,fy-0.35,0,0.7,0.7,0.14,'#DADAD5')+box(fx-0.12,fy-0.12,0.14,0.24,0.24,0.16,'#C9C7C1')+box(fx-0.2,fy-0.2,0.3,0.4,0.4,3.3,'#F1F1EE')+
+    poly([[fx-0.16,fy+0.204,0.5],[fx+0.16,fy+0.204,0.5],[fx+0.16,fy+0.204,3.4],[fx-0.16,fy+0.204,3.4]],'#B9B5AD','opacity=".2"')+`<g class="gY">${gY}</g>`+
+    poly([[fx+0.204,fy-0.16,0.5],[fx+0.204,fy+0.16,0.5],[fx+0.204,fy+0.16,3.4],[fx+0.204,fy-0.16,3.4]],'#B9B5AD','opacity=".35"')+`<g class="gX">${gX}</g>`+
+    box(fx-0.14,fy-0.14,3.6,0.28,0.28,0.07,'#8F8B84')+box(fx-0.03,fy-0.03,3.67,0.06,0.06,0.03,'#8F8B84').replace('<polygon','<polygon class="fanled"').replace('<polygon','<polygon class="fanled"').replace('<polygon','<polygon class="fanled"')+
+    `<g class="wind" pointer-events="none">${wind}</g>`));
+}
 
-    <template id="page-medfo">
-        <h1>Cahaya Pemantik</h1>
-        <div class="narrative-text">
-            <p>Saya juga aktif di Himpunan Mahasiswa Teknik Elektro (HMTE) sebagai Staf Departemen Media dan Informasi (Medfo) pada divisi Visual Komunikasi (Viskom). Tanggung jawab utama saya meliputi perancangan desain konten visual untuk media sosial seperti Instagram, manajemen aset digital, serta memastikan distribusi informasi kegiatan organisasi berjalan efektif dan konsisten.</p>
-        </div>
-        <div class="ig-gallery-grid">
-            <div class="ig-embed-wrapper">
-                <iframe src="https://www.instagram.com/p/DXqywCLEk7b/embed" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
-            </div>
-            <div class="ig-embed-wrapper">
-                <iframe src="https://www.instagram.com/p/DW34wLymD07/embed" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
-            </div>
-            <div class="ig-embed-wrapper">
-                <iframe src="https://www.instagram.com/p/DWyXcHfmLI4/embed" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
-            </div>
-            <div class="ig-embed-wrapper">
-                <iframe src="https://www.instagram.com/p/DV3Cp7Ckm78/embed" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
-            </div>
-        </div>
-        <div style="height: 400px;"></div>
-    </template>
+/* meja dengan ruang kaki + laci + laptop + lampu + buku + asbak + kursi */
+add(7.1, g('meja','Desk',sh(2.7,0.3,2.5,1.6,2.5)+
+  poly([[2.85,0.4,0],[5.05,0.4,0],[5.05,0.4,2.35],[2.85,0.4,2.35]],shade(wood,-.42))+
+  box(2.7,0.3,0,0.15,1.6,2.35,wood)+
+  box(4.35,0.35,1.75,0.7,1.5,0.6,shade(wood,-.06))+box(5.03,0.95,2.0,0.04,0.3,0.05,'#8F8B84')+
+  box(5.05,0.3,0,0.15,1.6,2.35,wood)+
+  box(2.7,0.3,2.35,2.5,1.6,0.15,wood)));
+add(7.2, g('lampu','Desk lamp: on or off',
+  box(2.8,0.5,2.5,0.42,0.42,0.06,'#4A4E55')+box(2.97,0.67,2.56,0.08,0.08,1.1,'#4A4E55')+box(2.97,0.67,3.62,0.6,0.08,0.08,'#4A4E55')+
+  box(3.42,0.5,3.42,0.42,0.34,0.2,'#4A4E55')+poly([[3.45,0.53,3.415],[3.81,0.53,3.415],[3.81,0.81,3.415],[3.45,0.81,3.415]],'#F2E6C2','opacity=".7"')));
+{
+  let lp=box(3.2,0.55,2.5,0.9,0.7,0.07,'#9AA0A6');
+  for(let r=0;r<3;r++)lp+=line([3.28,0.66+r*0.12,2.575],[4.0,0.66+r*0.12,2.575],'#6B7075',1.2);
+  lp+=poly([[3.5,1.05,2.575],[3.8,1.05,2.575],[3.8,1.2,2.575],[3.5,1.2,2.575]],'#B4B9BE');
+  lp+=poly([[3.2,0.6,2.57],[4.1,0.6,2.57],[4.1,0.6,3.25],[3.2,0.6,3.25]],'#3B4046',EDGE('#3B4046'))+
+      poly([[3.26,0.6,2.65],[4.04,0.6,2.65],[4.04,0.6,3.17],[3.26,0.6,3.17]],'#1E2A38')+
+      line([3.32,0.601,3.08],[3.7,0.601,3.08],'#8CC5E8',1)+line([3.32,0.601,2.98],[3.9,0.601,2.98],'#F2B23C',1)+line([3.32,0.601,2.88],[3.6,0.601,2.88],'#8CC5E8',1)+line([3.32,0.601,2.78],[3.85,0.601,2.78],'#A6BCC7',1);
+  add(7.3, g('laptop','Laptop: bug bounty',lp));
+}
+{
+  /* [judul, warna sampul, warna teks, penulis] — sampul digambar polos berwarna, bukan tiruan artwork aslinya */
+  const books=[['Kalkulus','#4F6D8C','#F4F1EA',''],['Bumi','#2F6F6D','#F4F1EA','Tere Liye'],['Di Tanah Lada','#E9B44C','#3B2B1A','Ziggy Z.'],['Laut Bercerita','#123B5C','#F4F1EA','Leila S. Chudori'],['Madilog','#8B1E1E','#F4F1EA','Tan Malaka']];
+  const bx=4.22,by=0.48,bw=0.92,bd=0.64,bh=0.16;let bk='';
+  books.forEach((b,i)=>{const ox=(i%2)*0.03,oy=(i%3)*0.02,z=2.5+i*bh;
+    bk+=box(bx+ox,by+oy,z,bw,bd,bh,b[1]);
+    bk+=`<g transform="${planeY(bx+ox+0.05,by+oy+bd+0.006,z+bh*0.32)}"><text font-family="Pixelify Sans,sans-serif" font-weight="600" font-size="0.1" fill="${b[2]}">${b[0]}</text></g>`;});
+  const t=books[books.length-1],ox=((books.length-1)%2)*0.03,oy=((books.length-1)%3)*0.02,zt=2.5+books.length*bh+0.003;
+  bk+=`<g transform="${planeZ(bx+ox+0.1,by+oy+0.16,zt)}"><text font-family="Pixelify Sans,sans-serif" font-weight="600" font-size="0.17" fill="${t[2]}">${t[0]}</text><text y="0.2" font-family="Pixelify Sans,sans-serif" font-size="0.085" fill="${t[2]}" opacity=".85">${t[3]}</text></g>`;
+  add(7.4, g('buku','Books: class and reading',bk));
+}
+{
+  const [sx,sy]=P(4.75,1.62,2.64);
+  add(7.42, g('asbak','Ashtray and a cigarette',
+    box(4.6,1.48,2.5,0.32,0.28,0.1,'#9AA0A6')+poly([[4.65,1.53,2.601],[4.87,1.53,2.601],[4.87,1.71,2.601],[4.65,1.71,2.601]],'#5F6368')+
+    box(4.5,1.6,2.6,0.34,0.05,0.05,'#F4F3EF')+box(4.84,1.6,2.6,0.05,0.05,0.05,'#D97A3A')+
+    `<path class="smoke" pointer-events="none" d="M${(sx+6).toFixed(1)} ${(sy-2).toFixed(1)}c-3 -6 3 -8 0 -14c-3 -5 2 -8 0 -12" fill="none" stroke="#9AA0A6" stroke-width="1.4" stroke-linecap="round"/>`));
+}
+add(7.45, g('kursi','Chair',box(3.52,1.5,0,0.08,0.08,1.4,metal)+box(4.3,1.5,0,0.08,0.08,1.4,metal)+box(3.5,1.45,1.4,0.9,0.8,0.14,'#B9B5AD')+
+  box(3.52,2.15,0,0.08,0.08,1.4,metal)+box(4.3,2.15,0,0.08,0.08,1.4,metal)+box(3.5,2.15,1.54,0.9,0.1,1.3,'#B9B5AD')+box(3.62,2.16,2.0,0.66,0.06,0.5,'#A9A59D')));
+const glow=`<g class="night-only" pointer-events="none">`+poly([[3.63,0.67,3.42],[3.1,0.2,2.5],[4.4,1.5,2.5]],'#F2B23C','opacity=".26"')+
+    poly([[3.35,0.35,2.505],[4.3,0.35,2.505],[4.3,1.4,2.505],[3.35,1.4,2.505]],'#F2B23C','opacity=".2"')+`</g>`;
 
-    <template id="page-contact">
-        <h1>The Fox</h1>
-        <p class="quote">"Kamu menjadi bertanggung jawab selamanya atas apa yang telah kamu jinakkan."</p>
-        <div class="data-block contact-block">
-            <ul class="contact-list">
-                <li>
-                    <div class="svg-icon-wrap ig-grad">
-                        <svg viewBox="0 0 24 24" fill="white" width="24" height="24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-                    </div>
-                    <a href="https://instagram.com/rofiarasyi" target="_blank">@rofiarasyi</a>
-                </li>
-                <li>
-                    <div class="svg-icon-wrap ln-color">
-                        <svg viewBox="0 0 24 24" fill="white" width="24" height="24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-                    </div>
-                    <a href="https://www.linkedin.com/in/rofiarasyi/" target="_blank">Rofi Arasyi</a>
-                </li>
-                <li>
-                    <div class="svg-icon-wrap gh-color">
-                        <svg viewBox="0 0 24 24" fill="white" width="24" height="24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-                    </div>
-                    <a href="https://github.com/badaihackerone-pixel" target="_blank">badaihackerone-pixel</a>
-                </li>
-                <li>
-                    <div class="svg-icon-wrap bc-color">
-                        <svg viewBox="0 0 24 24" fill="white" width="24" height="24"><path d="M12 2C6.48 2 2 4.22 2 7v5c0 5.55 3.84 10.74 10 12 6.16-1.26 10-6.45 10-12V7c0-2.78-4.48-5-10-5zm0 16.5c-4.32-1.08-7.5-5.06-7.5-9.5V7.64C6.27 6.47 9.07 5.5 12 5.5s5.73.97 7.5 2.14V14c0 4.44-3.18 8.42-7.5 9.5zm-2-6h4v2h-4v-2zm0-5h4v4h-4V7.5z"/></svg>
-                    </div>
-                    <a href="https://bugcrowd.com/h/Badai" target="_blank">Badai</a>
-                </li>
-            </ul>
-        </div>
-        <div style="height: 150px;"></div>
-    </template>
+/* rak terbuka N tingkat: panel belakang, sisi dalam, papan-papan + isinya, sisi luar, papan atas + isi atas */
+function shelfN(x,y,w,d,h,c,levels,top){
+  let o=poly([[x,y,0],[x,y+d,0],[x,y+d,h],[x,y,h]],shade(c,-.38))+poly([[x,y,0],[x+w,y,0],[x+w,y,h],[x,y,h]],shade(c,-.2));
+  for(const [z,html] of levels)o+=box(x,y,z,w,d,0.05,c)+html;
+  o+=poly([[x,y+d,0],[x+w,y+d,0],[x+w,y+d,h],[x,y+d,h]],c,EDGE(c))+poly([[x,y+d,0],[x+w,y+d,0],[x+w,y+d,h],[x,y+d,h]],'url(#gv)');
+  return o+box(x,y,h,w,d,0.06,c)+top;
+}
+/* piring kotak bertumpuk, mangkok, gelas, wadah sendok-garpu-pisau, mug */
+const plateStack=(x,y,z,n,sz=0.4)=>{let o='';for(let i=0;i<n;i++)o+=box(x,y,z+i*0.045,sz,sz,0.04,'#F2F1EC');return o+poly([[x+0.08,y+0.08,z+n*0.045+0.001],[x+sz-0.08,y+0.08,z+n*0.045+0.001],[x+sz-0.08,y+sz-0.08,z+n*0.045+0.001],[x+0.08,y+sz-0.08,z+n*0.045+0.001]],'#E4E2DC');};
+const bowl=(x,y,z,c='#F2F1EC')=>box(x,y,z,0.34,0.34,0.16,c)+poly([[x+0.05,y+0.05,z+0.161],[x+0.29,y+0.05,z+0.161],[x+0.29,y+0.29,z+0.161],[x+0.05,y+0.29,z+0.161]],shade(c,-.28));
+const glass=(x,y,z)=>box(x,y,z,0.15,0.15,0.34,'#D9EAF2')+poly([[x+0.03,y+0.03,z+0.341],[x+0.12,y+0.03,z+0.341],[x+0.12,y+0.12,z+0.341],[x+0.03,y+0.12,z+0.341]],'#B9D3E0');
+const mug=(x,y,z,c)=>box(x,y,z,0.22,0.22,0.24,c)+box(x+0.22,y+0.07,z+0.06,0.06,0.08,0.13,c)+poly([[x+0.04,y+0.04,z+0.241],[x+0.18,y+0.04,z+0.241],[x+0.18,y+0.18,z+0.241],[x+0.04,y+0.18,z+0.241]],'#5A4636');
+const cutlery=(x,y,z)=>box(x,y,z,0.24,0.24,0.28,'#B9B5AD')+[0,1,2,3,4].map(i=>box(x+0.03+(i%3)*0.07,y+0.03+Math.floor(i/3)*0.09,z+0.28,0.03,0.03,0.22+(i%2)*0.06,i%3===0?'#C9CDD1':i%3===1?'#B4B9BE':'#8F959C')).join('');
+/* rak piring: lebih lebar tapi lebih pendek */
+add(7.6, g('rakdapur','Kitchen shelf: plates, bowls, glasses, cutlery, rice cooker, pot',sh(0.15,4.9,0.9,1.7,1.9)+shelfN(0.15,4.9,0.9,1.7,1.9,'#D9CFBF',[
+  [0.02, plateStack(0.35,4.98,0.07,5)+bowl(0.38,5.5,0.07)+bowl(0.38,5.5,0.23)+mug(0.38,5.95,0.07,'#6C9BC2')+mug(0.66,5.95,0.07,'#E38B6B')+cutlery(0.55,6.3,0.07)],
+  [0.92, plateStack(0.35,4.98,0.97,3,0.36)+bowl(0.4,5.45,0.97,'#CFE0D3')+glass(0.4,5.9,0.97)+glass(0.62,5.9,0.97)+glass(0.51,6.12,0.97)+box(0.4,6.35,0.97,0.28,0.24,0.3,'#8FA7C7')+box(0.4,6.35,1.27,0.28,0.24,0.04,'#5F6E82')]
+],
+  box(0.4,5.05,1.96,0.5,0.5,0.4,'#EDECE7')+box(0.43,5.08,2.36,0.44,0.44,0.08,'#F4F3EF')+box(0.6,5.25,2.44,0.1,0.1,0.06,'#8F8B84')+box(0.9,5.2,2.05,0.06,0.2,0.16,'#8F8B84')+
+  box(0.38,5.8,1.96,0.5,0.46,0.28,'#AEB4BA')+box(0.4,5.82,2.24,0.46,0.42,0.06,'#D8DCE0')+box(0.58,5.98,2.3,0.1,0.1,0.06,'#5F6368')+box(0.56,6.26,2.1,0.1,0.42,0.06,'#5F6368')+
+  box(0.42,6.36,1.96,0.18,0.18,0.42,'#4CAF50')+box(0.46,6.4,2.38,0.1,0.1,0.06,'#2E7D32')
+)));
+/* rak makanan: lebih tinggi tapi lebih sempit; tiga tingkat */
+const pack=(x,y,z,w,d,h,c1,c2)=>box(x,y,z,w*0.68,d,h,c1)+box(x+w*0.68,y,z,w*0.32,d,h,c2);
+const can=(x,y,z,c='#C0392B')=>box(x,y,z,0.24,0.24,0.3,c)+box(x-0.005,y-0.005,z+0.1,0.25,0.25,0.1,'#E8B4A6')+box(x+0.02,y+0.02,z+0.3,0.2,0.2,0.02,'#B9BDC2');
+add(9.9, g('rakmakanan','Food shelf: instant noodles, coffee, sardines, sugar, soap',sh(0.15,7.0,0.9,1.0,2.6)+shelfN(0.15,7.0,0.9,1.0,2.6,'#8E8A85',[
+  [0.02, pack(0.28,7.08,0.07,0.48,0.36,0.09,'#F2C94C','#C0392B')+pack(0.28,7.08,0.16,0.48,0.36,0.09,'#F2C94C','#C0392B')+pack(0.28,7.08,0.25,0.48,0.36,0.09,'#F2C94C','#C0392B')+
+         pack(0.28,7.5,0.07,0.48,0.36,0.09,'#F2C94C','#3E9B6B')+pack(0.28,7.5,0.16,0.48,0.36,0.09,'#F28C28','#C0392B')+can(0.8,7.1,0.07)+can(0.8,7.4,0.07)+can(0.8,7.7,0.07)],
+  [0.9, box(0.3,7.1,0.95,0.3,0.3,0.36,'#3E2A1F')+box(0.295,7.095,1.05,0.31,0.31,0.14,'#C62828')+box(0.32,7.12,1.31,0.26,0.26,0.06,'#4A2C1E')+
+        [0,1,2,3,4].map(i=>box(0.66+i*0.065,7.1,0.95,0.05,0.22,0.36,'#B71C1C')+box(0.66+i*0.065,7.1,1.11,0.05,0.22,0.05,'#222222')).join('')+
+        box(0.32,7.5,0.95,0.3,0.25,0.3,'#EDEDE8')+box(0.32,7.5,1.07,0.3,0.25,0.06,'#3F79B8')+box(0.68,7.55,0.95,0.24,0.24,0.2,'#D2B04C')+box(0.68,7.55,1.15,0.24,0.24,0.03,'#8B6D22')],
+  [1.75, box(0.35,7.08,1.8,0.16,0.16,0.4,'#4CAF50')+box(0.38,7.11,2.2,0.1,0.1,0.06,'#2E7D32')+box(0.58,7.1,1.8,0.16,0.16,0.44,'#3F79B8')+box(0.61,7.13,2.24,0.1,0.1,0.05,'#F0EEE8')+
+         box(0.35,7.4,1.8,0.22,0.14,0.1,'#F0EEE8')+box(0.35,7.4,1.84,0.22,0.14,0.03,'#3F79B8')+box(0.62,7.36,1.8,0.28,0.07,0.06,'#F0EEE8')+box(0.62,7.36,1.82,0.28,0.07,0.02,'#C0392B')+
+         box(0.36,7.62,1.8,0.28,0.28,0.3,'#F7F5F0')+poly([[0.42,7.68,2.101],[0.58,7.68,2.101],[0.58,7.84,2.101],[0.42,7.84,2.101]],'#E0DDD5')]
+],
+  box(0.25,7.06,2.66,0.6,0.42,0.42,'#C9A26B')+box(0.25,7.06,2.88,0.6,0.42,0.08,'#C0392B')+box(0.5,7.6,2.66,0.2,0.2,0.55,'#8CC5E8')+box(0.53,7.63,3.21,0.14,0.14,0.06,'#3F79B8')
+)));
 
-    <script src="script.js"></script>
+/* kasur: kepala di dinding kanan, kaki menghadap lemari; bantal, selimut berlipat */
+add(14.0, g('kasur','Bed',sh(5.5,0.3,3.1,5.1,1.0)+box(5.5,0.3,0,3.1,5.1,0.55,'#B7A38C')+box(5.55,0.35,0.55,3.0,5.0,0.45,'#EEEBE4')+
+  box(5.75,0.45,1.0,2.6,0.9,0.22,'#F7F5F0')+box(5.65,1.9,1.0,2.8,3.3,0.1,'#A6BCC7')+box(5.65,1.9,1.1,2.8,0.4,0.06,'#B9CBD5')+box(5.65,4.8,1.1,2.8,0.4,0.06,'#B9CBD5')));
+/* kucing ala ikon, proporsi duduk: paha lebar di bawah, dada tegak, kepala lebih kecil, kaki depan gelap, satu kaki hormat */
+{
+  const fur='#B9B4AA',fur2='#A39E93',mask='#8C877D',dark='#5C5751',pink='#D89A8E';
+  add(14.1, g('kucing','Cat: your guide',
+    `<g id="cat">`+
+    box(6.72,2.5,1.0,0.14,0.55,0.1,dark)+box(6.72,3.05,1.0,0.4,0.12,0.1,dark)+          /* ekor melingkar */
+    box(6.85,2.6,1.0,0.6,0.5,0.35,fur)+                                                  /* paha belakang */
+    box(6.93,2.95,1.0,0.44,0.46,0.55,fur)+                                               /* dada tegak */
+    box(6.98,2.7,1.35,0.34,0.3,0.05,fur2)+box(6.98,3.0,1.55,0.34,0.3,0.05,fur2)+          /* belang punggung */
+    `<g class="pawdown-r">`+box(7.22,3.38,1.0,0.11,0.12,0.5,dark)+`</g>`+               /* kaki depan kanan (turun sesaat) */
+    box(6.98,3.38,1.0,0.11,0.12,0.5,dark)+                                               /* kaki depan kiri */
+    box(6.9,3.12,1.5,0.5,0.4,0.46,fur)+                                                  /* kepala */
+    box(6.93,3.45,1.68,0.44,0.08,0.15,mask)+                                             /* topeng sekitar mata */
+    box(6.93,3.15,1.96,0.12,0.12,0.14,fur2)+box(7.25,3.15,1.96,0.12,0.12,0.14,fur2)+      /* telinga */
+    box(6.96,3.18,1.96,0.06,0.06,0.06,pink)+box(7.28,3.18,1.96,0.06,0.06,0.06,pink)+
+    line([7.02,3.53,1.94],[7.05,3.53,1.87],mask,1.4)+line([7.15,3.53,1.95],[7.15,3.53,1.87],mask,1.4)+line([7.28,3.53,1.94],[7.25,3.53,1.87],mask,1.4)+   /* belang dahi */
+    line([6.99,3.53,1.77],[7.08,3.53,1.77],'#2E2E33',1.6)+line([7.22,3.53,1.77],[7.31,3.53,1.77],'#2E2E33',1.6)+   /* mata terpejam */
+    box(7.12,3.51,1.63,0.06,0.04,0.04,pink)+                                             /* hidung */
+    line([6.94,3.53,1.66],[6.78,3.53,1.69],'#7C7870',.8)+line([6.94,3.53,1.61],[6.78,3.53,1.58],'#7C7870',.8)+
+    line([7.36,3.53,1.66],[7.52,3.53,1.69],'#7C7870',.8)+line([7.36,3.53,1.61],[7.52,3.53,1.58],'#7C7870',.8)+
+    `<g class="pawup">`+box(7.22,3.38,1.25,0.11,0.12,0.5,dark)+box(7.17,3.47,1.7,0.14,0.11,0.11,dark)+`</g>`+   /* lengan terangkat + telapak di pelipis */
+    `</g>`));
+}
+/* gitar kotak-kotak: badan dua kotak, leher, kepala; empat lapis supaya tebal */
+{
+  const gtr=(c,c2)=>`<g transform="rotate(-8)">
+      <rect x="-0.34" y="-0.8" width="0.68" height="0.72" rx=".04" fill="${c}" stroke="${c2}" stroke-width=".02"/>
+      <rect x="-0.27" y="-1.28" width="0.54" height="0.5" rx=".04" fill="${c}" stroke="${c2}" stroke-width=".02"/>
+      <rect x="-0.06" y="-2.55" width="0.12" height="1.3" fill="${c2}"/><rect x="-0.11" y="-2.82" width="0.22" height="0.3" rx=".03" fill="#3D2A15"/>
+    </g>`;
+  add(14.5, g('gitar','Guitar',
+    [[5.72,'#7E5228'],[5.78,'#8F5F2E'],[5.84,'#A26E38']].map(([yy,c])=>`<g transform="${planeY(8.3,yy,0)}">${gtr(c,'#5A3A1A')}</g>`).join('')+
+    `<g transform="${planeY(8.3,5.9,0)}">${gtr('#C58A4A','#7A5227')}<g transform="rotate(-8)"><rect x="-0.09" y="-0.6" width="0.18" height="0.18" fill="#5A3A1A"/><line x1="0" y1="-2.5" x2="0" y2="-0.2" stroke="#F1E6D0" stroke-width=".02"/></g></g>`));
+}
+/* lemari lebar mepet ujung + buku berdiri di atasnya */
+{
+  const stand=[['Daun yang Jatuh','#7FA9B8','#1F2E36','Tere Liye'],['The Little Prince','#B8D8E8','#1F2E36','Saint-Exupéry'],['Seporsi Mie Ayam','#F0A04B','#3B2B1A','Brian Khrisna'],['Pulang','#4E6E58','#F4F1EA',''],['Oyasumi Punpun','#F4F1EA','#2E3238','Inio Asano']];
+  let bk='';
+  stand.forEach((b,i)=>{const x=7.22+i*0.24,y=7.55,z=5.56;
+    bk+=box(x,y,z,0.2,0.5,0.7,b[1]);
+    bk+=`<g transform="${planeY(x+0.03,y+0.506,z+0.5)}"><text font-family="Pixelify Sans,sans-serif" font-weight="600" font-size="0.075" fill="${b[2]}">${b[0]}</text></g>`;});
+  add(17.4, g('lemari','Wardrobe',sh(7.1,6.4,1.5,2.4,5.5)+box(7.1,6.4,0,1.5,2.4,5.5,'#DAD0C0')+
+    poly([[8.62,6.5,0.2],[8.62,8.7,0.2],[8.62,8.7,5.3],[8.62,6.5,5.3]],'none','stroke="#B9AE9C" stroke-width=".8" stroke-opacity=".7"')+
+    line([8.62,7.6,0.2],[8.62,7.6,5.3],'#B9AE9C',.8)));
+  add(17.5, g('buku','Books on the wardrobe',bk));
+}
+
+/* urutkan dari yang jauh ke dekat, lalu gambar */
+items.sort((a,b)=>a.k-b.k);
+s+=items.map(i=>i.html).join('')+glow;
+
+/* =====================================================================
+   3) PENANDA PETUNJUK (kotak berlian, senada gaya balok)
+   ===================================================================== */
+const CLUE_IDS=['laptop','buku','poster','cermin'];
+const anchors={laptop:P(3.65,0.6,3.55),buku:P(4.65,0.9,3.5),poster:P(6.85,0.05,5.65),cermin:P(0.05,6.0,6.2),pintu:P(0.05,1.05,7.1)};
+let marks='';
+for(const id of [...CLUE_IDS,'pintu']){
+  const [x,y]=anchors[id];
+  marks+=`<g class="mk" data-id="${id}" transform="translate(${x.toFixed(1)},${y.toFixed(1)})"><rect class="ring" x="-8" y="-8" width="16" height="16"/><rect class="dot" x="-5.5" y="-5.5" width="11" height="11"/><path class="tick" d="M-3.2 0.2l2.2 2.2 4.4-4.6"/></g>`;
+}
+document.getElementById('room').innerHTML=`${defs}<g class="scene">${s}</g><g id="marks">${marks}</g>`;
+
+/* =====================================================================
+   4) ISI KARTU PETUNJUK  — ganti teks/tautan/gambar di sini
+   ===================================================================== */
+const CAT_MAP=[
+"....F.........F.....",
+"...FFF.......FFF....",
+"...FPF.......FPF....",
+"...FFFFFFFFFFFFF....",
+"..FFFFSFFFFFSFFFF...",
+"..FFFFFSFFFSFFFFF...",
+"..FFEFEFFFFFEFEFFDD.",
+"..FFFEFFFFFFFEFFFDD.",
+"SSFFFFFFFPPFFFFFF.D.",
+"..FFFFFFSFFSFFFFF.D.",
+"SSFFFFFFFFFFFFFFF.D.",
+"...FFFFFFFFFFFFF..D.",
+"....FFFFFFFFFFF...D.",
+"...FFFFFFFFFFFFFFDD.",
+"..SFFFFFFFFFFFFFFS..",
+"..SFFFFFFFFFFFFFFS..",
+"..SFFFFFFFFFFFFFFS..",
+"..FFFFFFFFFFFFFFFF..",
+"..DDDFFFFFFFFFFDDD..",
+"..DDD..........DDD.."];
+const CAT_COL={F:'#B9B4AA',S:'#8C877D',E:'#2E2E33',P:'#D89A8E',D:'#5C5751'};
+const catSvg=(()=>{let r='';CAT_MAP.forEach((row,y)=>{[...row].forEach((ch,x)=>{if(CAT_COL[ch])r+=`<rect x="${x}" y="${y}" width="1" height="1" fill="${CAT_COL[ch]}"/>`;});});
+  return `<svg viewBox="0 0 20 20" shape-rendering="crispEdges" aria-hidden="true">${r}</svg>`;})();
+
+const CLUES={
+  laptop:{
+    tag:'bug bounty',
+    title:'The laptop',
+    html:`
+      <p>Night shift happens here. Web security research on HackerOne and Bugcrowd since 2025, as <b>Badai</b>.</p>
+      <p>Mostly SSRF, server-side injection, auth bypass, race conditions. Some reports got paid, plenty got marked duplicate. Anything under a program's rules stays private, including which programs.</p>
+      <div class="report">
+        <b>Class:</b> SSRF · <b>Program:</b> <span class="redact"></span> · <b>Details:</b> private<br>
+        <b>Class:</b> auth bypass · <b>Program:</b> <span class="redact l"></span> · <b>Details:</b> private<br>
+        <b>Class:</b> race condition · <b>Program:</b> <span class="redact"></span> · <b>Details:</b> private<br>
+        <b>Tools:</b> Burp Suite, Postman, Linux, Python
+      </div>
+      <ul class="links">
+        <li><a href="https://bugcrowd.com/h/Badai" target="_blank" rel="noopener"><span>Bugcrowd profile</span><span class="mono">Badai ↗</span></a></li>
+      </ul>`
+  },
+  buku:{
+    tag:'class & reading',
+    title:'Books on the desk',
+    html:`
+      <div class="covers">
+        <div class="cover" style="background:#4F6D8C"><b>Kalkulus</b><span>class</span></div>
+        <div class="cover" style="background:#3E9B6B"><b>Rangkaian Listrik</b><span>class</span></div>
+        <div class="cover" style="background:#5B7F95"><b>Sinyal &amp; Sistem</b><span>class</span></div>
+        <div class="cover" style="background:#8B1E1E"><b>Madilog</b><span>Tan Malaka</span></div>
+        <div class="cover" style="background:#123B5C"><b>Laut Bercerita</b><span>Leila S. Chudori</span></div>
+        <div class="cover" style="background:#E9B44C;color:#3B2B1A"><b>Di Tanah Lada</b><span>Ziggy Z.</span></div>
+        <div class="cover" style="background:#2F6F6D"><b>Bumi</b><span>Tere Liye</span></div>
+        <div class="cover" style="background:#7FA9B8;color:#1F2E36"><b>Daun yang Jatuh Tak Pernah Membenci Angin</b><span>Tere Liye</span></div>
+        <div class="cover" style="background:#B8D8E8;color:#1F2E36"><b>The Little Prince</b><span>Saint-Exupéry</span></div>
+        <div class="cover" style="background:#F0A04B;color:#3B2B1A"><b>Seporsi Mie Ayam Sebelum Mati</b><span>Brian Khrisna</span></div>
+        <div class="cover" style="background:#4E6E58"><b>Pulang</b><span></span></div>
+        <div class="cover" style="background:#F4F1EA;color:#2E3238;border:1px solid var(--line)"><b>Oyasumi Punpun</b><span>Inio Asano</span></div>
+      </div>
+      <p>Half coursework, half things I read instead. <b>Electrical Engineering, Universitas Padjadjaran</b>, class of 2025.</p>
+      <p>Best part is when the math, the signals and the circuits click into one thing.</p>
+`
+  },
+  poster:{
+    tag:'design',
+    title:'Prints on the wall',
+    html:`
+      <p>I'm on the media team of my department's student association and help make its Instagram posts. Visual comms, mostly event posts and info carousels.</p>
+      <p>These are my own drafts and layouts, not official statements from anyone.</p>
+      <div class="thumbs">
+        <figure>Post 1<br>(swap image)</figure>
+        <figure>Post 2<br>(swap image)</figure>
+        <figure>Post 3<br>(swap image)</figure>
+      </div>
+      <ul class="links">
+        <li><a href="https://instagram.com/hmteunpad" target="_blank" rel="noopener"><span>HMTE Unpad on Instagram</span><span class="mono">@hmteunpad ↗</span></a></li>
+      </ul>`
+  },
+  cermin:{
+    tag:'about',
+    title:'What the mirror shows',
+    html:`
+      <div style="display:flex;gap:14px;align-items:flex-start"><figure class="photo">your photo<br>(swap image)</figure><div class="cat">${catSvg}</div></div>
+      <p><b>Rofi Arasyi</b>. The saluting cat is my profile picture everywhere.</p>
+      <p>I like quiet things: reading, poking at systems until they make sense, keeping stuff tidy.</p>`
+  },
+  jam:{
+    tag:'schedule',
+    title:'This semester',
+    html:`
+      <p id="jamNow" class="muted"></p>
+      <table class="jadwal">
+        <tr data-day="1"><td>Mon</td><td>Complex Variables, Discrete Math</td></tr>
+        <tr data-day="2"><td>Tue</td><td>Circuits lab, Physics lab</td></tr>
+        <tr data-day="3"><td>Wed</td><td>Free.</td></tr>
+        <tr data-day="4"><td>Thu</td><td>Signals &amp; Systems, Linear Algebra</td></tr>
+        <tr data-day="5"><td>Fri</td><td>Physics III, Circuits I</td></tr>
+        <tr data-day="6"><td>Sat</td><td>Free.</td></tr>
+        <tr data-day="0"><td>Sun</td><td>Bug bounty.</td></tr>
+      </table>
+      <p class="muted">Edit <span class="mono">CLUES.jam</span> in the code when this changes.</p>`
+  },
+  pintu:{
+    tag:'contact',
+    title:'Say hi',
+    html:`
+      <p id="doorNote"></p>
+      <ul class="links">
+        <li><a href="https://instagram.com/rofiarasyi" target="_blank" rel="noopener"><span>Instagram</span><span class="mono">@rofiarasyi ↗</span></a></li>
+        <li><a href="https://www.linkedin.com/in/rofiarasyi/" target="_blank" rel="noopener"><span>LinkedIn</span><span class="mono">rofiarasyi ↗</span></a></li>
+        <li><a href="https://github.com/badaihackerone-pixel" target="_blank" rel="noopener"><span>GitHub</span><span class="mono">↗</span></a></li>
+        <li><a href="https://bugcrowd.com/h/Badai" target="_blank" rel="noopener"><span>Bugcrowd</span><span class="mono">Badai ↗</span></a></li>
+      </ul>`
+  }
+};
+
+/* =====================================================================
+   5) INTERAKSI
+   ===================================================================== */
+const found=new Set();
+const bubble=document.getElementById('bubbleText');
+const panel=document.getElementById('panel'), panelBody=document.getElementById('panelBody'), backdrop=document.getElementById('backdrop');
+const toastEl=document.getElementById('toast');
+let toastT, idleT;
+const say=t=>{bubble.textContent=t;};
+const toast=t=>{toastEl.textContent=t;toastEl.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>toastEl.classList.remove('on'),2200);};
+
+function updateHud(){
+  const n=found.size;
+  document.getElementById('count').textContent=n===4?'Found all four':`Found ${n}/4`;
+  document.getElementById('count').classList.toggle('done',n===4);
+  document.querySelectorAll('#dots i').forEach((d,i)=>d.classList.toggle('on',i<n));
+}
+function openPanel(id){
+  const c=CLUES[id];
+  panelBody.innerHTML=`<span class="tag mono">${c.tag}</span><h2>${c.title}</h2>${c.html}`;
+  if(id==='pintu'){
+    const left=4-found.size;
+    document.getElementById('doorNote').textContent=left===0
+      ?'That is it. Thanks for stopping by.'
+      :`${left} thing${left>1?'s':''} you have not clicked yet. Door is open either way.`;
+  }
+  panel.classList.add('on');backdrop.classList.add('on');panel.setAttribute('aria-hidden','false');
+  panel.querySelector('.close').focus();
+}
+function closePanel(){panel.classList.remove('on');backdrop.classList.remove('on');panel.setAttribute('aria-hidden','true');}
+document.querySelector('#panel .close').addEventListener('click',closePanel);
+backdrop.addEventListener('click',closePanel);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closePanel();});
+
+const hints={laptop:'Try the laptop.',buku:'The books on the desk.',poster:'The prints above the bed.',cermin:'The mirror.'};
+function catHint(){
+  const left=CLUE_IDS.filter(i=>!found.has(i));
+  if(!left.length){say('That is all four. Door is on the left if you want to say hi.');return;}
+  say(hints[left[Math.floor(Math.random()*left.length)]]);
+}
+function salute(){const c=document.getElementById('cat');c.classList.add('salute');setTimeout(()=>c.classList.remove('salute'),1100);}
+function markFound(id){
+  if(!found.has(id)){found.add(id);document.querySelector(`.mk[data-id="${id}"]`).classList.add('found');updateHud();
+    if(found.size===4){salute();say('That is all four. Door is on the left if you want to say hi.');document.querySelector('.mk[data-id="pintu"]').style.opacity=1;}
+  }
+}
+/* ---- suara: semuanya disintesis di browser, tanpa file ---- */
+let AC, muted=false;
+const ac=()=>AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+function tone(o){if(muted)return;try{const a=ac();const {f=440,to=null,d=.3,type='sine',g=.2,delay=0}=o;const t=a.currentTime+delay;
+  const osc=a.createOscillator(),gn=a.createGain();osc.type=type;osc.frequency.setValueAtTime(f,t);if(to)osc.frequency.exponentialRampToValueAtTime(to,t+d);
+  gn.gain.setValueAtTime(.0001,t);gn.gain.exponentialRampToValueAtTime(g,t+.012);gn.gain.exponentialRampToValueAtTime(.0001,t+d);
+  osc.connect(gn).connect(a.destination);osc.start(t);osc.stop(t+d+.05);}catch(e){}}
+function noise(o){if(muted)return;try{const a=ac();const {d=.2,f=1000,to=null,q=1,g=.2,delay=0,type='bandpass'}=o;const t=a.currentTime+delay;
+  const n=Math.floor(a.sampleRate*d),buf=a.createBuffer(1,n,a.sampleRate),ch=buf.getChannelData(0);for(let i=0;i<n;i++)ch[i]=Math.random()*2-1;
+  const src=a.createBufferSource();src.buffer=buf;const flt=a.createBiquadFilter();flt.type=type;flt.frequency.setValueAtTime(f,t);if(to)flt.frequency.exponentialRampToValueAtTime(to,t+d);flt.Q.value=q;
+  const gn=a.createGain();gn.gain.setValueAtTime(g,t);gn.gain.exponentialRampToValueAtTime(.0001,t+d);src.connect(flt).connect(gn).connect(a.destination);src.start(t);src.stop(t+d+.05);}catch(e){}}
+const sfx={
+  pintu:()=>{noise({d:.08,f:180,q:2,g:.5});tone({f:95,to:60,d:.12,g:.25});noise({d:.08,f:180,q:2,g:.45,delay:.18});tone({f:95,to:60,d:.12,g:.22,delay:.18});},
+  jendela:()=>{noise({d:.9,f:500,to:1500,q:.6,g:.12});tone({f:1568,d:.5,g:.05,delay:.15});},
+  cermin:()=>{tone({f:2093,d:.9,g:.1});tone({f:3136,d:.5,g:.05,delay:.02});},
+  gantungan:()=>{tone({f:2900,d:.06,type:'square',g:.04});noise({d:.05,f:4200,q:3,g:.15});tone({f:2400,d:.06,type:'square',g:.03,delay:.09});},
+  poster:()=>{noise({d:.16,f:2600,to:900,q:.8,g:.22,type:'highpass'});},
+  karpet:()=>{noise({d:.35,f:260,q:.7,g:.35,type:'lowpass'});},
+  sampah:()=>{tone({f:520,d:.25,type:'square',g:.06});tone({f:790,d:.3,type:'triangle',g:.06});noise({d:.05,f:3200,q:2,g:.2});},
+  kipasOn:()=>{noise({d:.7,f:250,to:900,q:.6,g:.12,type:'lowpass'});},
+  kipasOff:()=>{noise({d:.6,f:900,to:180,q:.6,g:.1,type:'lowpass'});},
+  meja:()=>{tone({f:150,to:90,d:.16,g:.35});noise({d:.04,f:900,q:1,g:.25});},
+  lampu:()=>{noise({d:.03,f:3500,q:2,g:.35});tone({f:2100,d:.025,type:'square',g:.05});},
+  laptop:()=>{[0,.09,.17].forEach(dl=>noise({d:.03,f:2200,q:2,g:.25,delay:dl}));tone({f:880,d:.35,g:.06,delay:.28});tone({f:1320,d:.35,g:.04,delay:.36});},
+  buku:()=>{noise({d:.2,f:1900,to:500,q:.8,g:.25,type:'highpass'});},
+  kursi:()=>{tone({f:330,to:190,d:.32,type:'triangle',g:.09});},
+  rakdapur:()=>{tone({f:1200,d:.5,type:'triangle',g:.1});tone({f:1900,d:.4,type:'triangle',g:.06,delay:.03});noise({d:.04,f:3000,q:2,g:.15});},
+  rakmakanan:()=>{noise({d:.22,f:3000,q:.9,g:.14,type:'highpass'});noise({d:.18,f:2600,q:.9,g:.1,type:'highpass',delay:.15});},
+  kasur:()=>{noise({d:.4,f:220,q:.7,g:.3,type:'lowpass'});tone({f:120,to:80,d:.22,g:.1});},
+  kucing:()=>{tone({f:520,to:880,d:.22,type:'triangle',g:.14});tone({f:880,to:470,d:.3,type:'triangle',g:.14,delay:.2});},
+  gitar:()=>{},
+  lemari:()=>{tone({f:220,d:.12,type:'square',g:.05});tone({f:165,d:.22,type:'square',g:.05,delay:.15});noise({d:.05,f:500,q:1,g:.3,delay:.15});},
+  asbak:()=>{tone({f:1500,d:.14,type:'triangle',g:.06});noise({d:.04,f:4200,q:2,g:.18});noise({d:.03,f:3200,q:2,g:.2,delay:.16});},
+  jam:()=>{noise({d:.02,f:3000,q:2,g:.35});noise({d:.02,f:2200,q:2,g:.3,delay:.5});},
+  saklar:()=>{tone({f:900,to:600,d:.05,type:'square',g:.06});noise({d:.03,f:2800,q:2,g:.3,delay:.02});},
+  stopkontak:()=>{noise({d:.14,f:2600,q:.8,g:.3,type:'highpass'});tone({f:62,d:.22,type:'sawtooth',g:.05});noise({d:.05,f:3200,q:2,g:.25,delay:.18});}
+};
+/* ---- pemutar melodi untuk gitar ----
+   Format: [nada, panjang dalam ketukan, (opsional) nada bass]. '-' = jeda.
+   Ganti isi MELODI dengan nada apa pun yang kamu mau; nama nada: C4, D#4, A3, dst. */
+const MELODI={bpm:104,notes:[
+  ['E4',1,'E2'],['G4',1],['A4',1.5],['G4',.5],['E4',1],['D4',1],['E4',2],
+  ['E4',1,'E2'],['G4',1],['A4',1.5],['B4',.5],['A4',1],['G4',1],['E4',2],
+  ['G4',1,'G2'],['A4',1],['B4',1.5],['A4',.5],['G4',1],['E4',1],['D4',2],
+  ['E4',1,'D2'],['D4',1],['B3',1.5],['D4',.5],['E4',1],['G4',1],['E4',3],
+  ['-',1],
+  ['B4',1,'E2'],['A4',1],['G4',1.5],['A4',.5],['B4',1],['D5',1],['B4',2],
+  ['A4',1,'C3'],['G4',1],['E4',1.5],['G4',.5],['A4',1],['G4',1],['E4',2],
+  ['G4',1,'G2'],['E4',1],['D4',1.5],['E4',.5],['G4',1],['A4',1],['B4',2],
+  ['A4',1,'D2'],['G4',1],['E4',1.5],['D4',.5],['E4',3,'E2']
+]};
+const NOTE={C:0,'C#':1,D:2,'D#':3,E:4,F:5,'F#':6,G:7,'G#':8,A:9,'A#':10,B:11};
+const freqOf=n=>{const m=n.match(/^([A-G]#?)(\d)$/);return 440*Math.pow(2,(NOTE[m[1]]+(+m[2]-4)*12-9)/12);};
+let melodyTimers=[],melodyOn=false;
+function stopMelody(){melodyTimers.forEach(clearTimeout);melodyTimers=[];melodyOn=false;const gt=document.querySelector('.obj[data-id="gitar"]');if(gt)gt.classList.remove('playing');}
+function playMelody(m){
+  stopMelody();melodyOn=true;document.querySelector('.obj[data-id="gitar"]').classList.add('playing');
+  const beat=60/m.bpm;let t=0;
+  for(const [n,len,bass] of m.notes){
+    const dl=t;
+    if(n!=='-'){melodyTimers.push(setTimeout(()=>{tone({f:freqOf(n),d:Math.min(1.6,len*beat+.5),type:'triangle',g:.13});tone({f:freqOf(n)*2,d:.25,type:'sine',g:.03});},dl*1000));}
+    if(bass){melodyTimers.push(setTimeout(()=>tone({f:freqOf(bass),d:Math.min(2.2,len*beat*2),type:'sine',g:.09}),dl*1000));}
+    t+=len*beat;
+  }
+  melodyTimers.push(setTimeout(stopMelody,(t+1.5)*1000));
+}
+const ANIM={pintu:'knock',jendela:'flash',cermin:'wobble',gantungan:'swing',poster:'tilt',karpet:'tug',sampah:'lid',kipas:'pop',meja:'shake',lampu:'flicker',laptop:'flash',buku:'flip',kursi:'rock',rakdapur:'rattle',rakmakanan:'jitter',kasur:'sink',kucing:'bounce',gitar:'strum',lemari:'locked',asbak:'clink',jam:'tick',saklar:'cetek',stopkontak:'zap'};
+function animate(id,el){el=el||document.querySelector(`.obj[data-id="${id}"]`);const c='an-'+ANIM[id];if(!el||!ANIM[id])return;el.classList.remove(c);void el.getBoundingClientRect();el.classList.add(c);setTimeout(()=>el.classList.remove(c),1400);}
+let audio;
+function pluck(){
+  try{audio=audio||new (window.AudioContext||window.webkitAudioContext)();
+    const o=audio.createOscillator(),gn=audio.createGain();o.type='triangle';o.frequency.value=196;
+    gn.gain.setValueAtTime(.0001,audio.currentTime);gn.gain.exponentialRampToValueAtTime(.25,audio.currentTime+.01);gn.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+1.4);
+    o.connect(gn).connect(audio.destination);o.start();o.stop(audio.currentTime+1.5);}catch(e){}
+}
+function act(id,el){
+  clearTimeout(idleT);idle();
+  animate(id,el);
+  if(sfx[id])sfx[id]();
+  switch(id){
+    case 'laptop':case 'buku':case 'poster':case 'cermin':markFound(id);openPanel(id);break;
+    case 'pintu':openPanel('pintu');break;
+    case 'kucing':salute();catHint();break;
+    case 'lampu':document.body.classList.toggle('night');say(document.body.classList.contains('night')?'Lamp on. Night mode.':'Lamp off.');break;
+    case 'kipas':{const k=document.querySelector('.obj[data-id="kipas"]');k.classList.toggle('spin');const on=k.classList.contains('spin');on?sfx.kipasOn():sfx.kipasOff();say(on?'Fan on.':'Fan off.');break;}
+    case 'gitar':{if(melodyOn){stopMelody();say('Stopped.');}else{playMelody(MELODI);say('One short song. Click again to stop.');}break;}
+    case 'lemari':toast('Private.');break;
+    case 'jendela':{const k=document.getElementById('kaca');const st=[['#CDE0E7','Morning.'],['#F2C89B','Late afternoon.'],['#2F3B52','Night.']];
+      window._sky=((window._sky||0)+1)%3;k.setAttribute('fill',st[window._sky][0]);say(st[window._sky][1]);break;}
+    case 'gantungan':{const gg=document.querySelector('.obj[data-id="gantungan"]');const v=((+gg.dataset.view||0)+1)%4;gg.dataset.view=v;
+      say(['My jacket. Teal side, and it is reversible.','Same jacket, from the back.','The other side, grey.','Grey side, from the back.'][v]);break;}
+    case 'rakdapur':say('Rice cooker, one pot, some plates. Dinner is usually rice and egg.');break;
+    case 'rakmakanan':say('Instant noodles, coffee sachets, sardines, soap. End-of-month stock.');break;
+    case 'sampah':say('Empty.');break;
+    case 'meja':say('The desk. Class stuff by day, bug bounty by night.');break;
+    case 'kursi':say('It squeaks.');break;
+    case 'kasur':say('The bed.');break;
+    case 'karpet':say('The rug. For sitting on the floor.');break;
+    case 'saklar':document.body.classList.toggle('gelap');say(document.body.classList.contains('gelap')?'Room light off.':'Room light on.');break;
+    case 'stopkontak':{const sk=el||document.querySelector('.obj[data-id="stopkontak"]');sk.classList.remove('zap');void sk.getBoundingClientRect();sk.classList.add('zap');setTimeout(()=>sk.classList.remove('zap'),600);say('The outlet. Laptop, fan and rice cooker take turns.');break;}
+    case 'asbak':{const a=document.querySelector('.obj[data-id="asbak"]');a.classList.remove('puff');void a.getBoundingClientRect();a.classList.add('puff');setTimeout(()=>a.classList.remove('puff'),1800);say('Ashtray.');break;}
+    case 'jam':{const n=new Date(),h=n.getHours(),m=String(n.getMinutes()).padStart(2,'0');
+      const w=h<5?'Still up. Probably bug bounty.':h<11?'Morning.':h<15?'Midday, probably on campus.':h<19?'Late afternoon.':'Night. Work hours.';
+      openPanel('jam');document.getElementById('jamNow').textContent=`It's ${h}:${m}. ${w}`;
+      const tr=document.querySelector(`.jadwal tr[data-day="${n.getDay()}"]`);if(tr)tr.classList.add('today');say('Schedule is on the card. Today is highlighted.');break;}
+  }
+}
+document.querySelectorAll('.obj').forEach(el=>{
+  el.addEventListener('click',()=>act(el.dataset.id,el));
+  el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();act(el.dataset.id,el);}});
+});
+/* jam dinding: jarum mengikuti waktu asli */
+function setClock(){
+  const {xc,zc}=window._clock;const n=new Date();const ha=((n.getHours()%12)+n.getMinutes()/60)*Math.PI/6, ma=n.getMinutes()*Math.PI/30;
+  const set=(id,a,L)=>{const q=P(xc-L*Math.sin(a),0.15,zc+L*Math.cos(a));const el=document.getElementById(id);el.setAttribute('x2',q[0].toFixed(1));el.setAttribute('y2',q[1].toFixed(1));};
+  set('hh',ha,0.26);set('mh',ma,0.38);
+}
+setClock();setInterval(setClock,30000);
+{const gg=document.querySelector('.obj[data-id="gantungan"]');gg.classList.add('jk');gg.dataset.view=0;}
+/* penanda pintu baru muncul setelah kasus selesai */
+document.querySelector('.mk[data-id="pintu"]').style.opacity=0;
+/* kalau pengunjung diam, kucing bantu */
+function idle(){idleT=setTimeout(()=>{if(found.size<4){catHint();salute();}},16000);}
+idle();
+updateHud();
+</script>
 </body>
 </html>
