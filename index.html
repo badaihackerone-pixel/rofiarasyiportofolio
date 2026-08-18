@@ -63,8 +63,10 @@ header{
 
 /* ---------- stage ---------- */
 main{max-width:1180px;margin:0 auto;padding:6px 16px 120px}
+#stage-wrap{width:100%}
 #stage{position:relative;width:100%;max-width:820px;margin:0 auto}
-#room{width:100%;height:auto;display:block;overflow:visible}
+#room{width:100%;height:auto;max-height:calc(100vh - 165px);display:block;overflow:visible}
+.swipe{display:none;font-family:var(--mono);font-size:12px;color:var(--muted);text-align:center;margin:8px 0 0}
 .scene{transition:filter .8s ease}
 body.night .scene{filter:brightness(.52) saturate(.8)}
 body.gelap .scene{filter:brightness(.3) saturate(.7)}
@@ -227,6 +229,10 @@ body.night #panel .tag{color:var(--accent)}
 #panel .links a:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 var(--ink)}
 #panel .links .mono{color:var(--muted)}
 .thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.thumbs.ig{grid-template-columns:1fr}
+.igmore{justify-self:start;border:2px solid var(--ink);background:var(--panel);color:var(--ink);font-family:var(--mono);font-size:12px;padding:8px 12px 6px;cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+.igmore:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 var(--ink)}
+.thumbs.ig .instagram-media{border:2px solid var(--line)!important;box-shadow:none!important;max-width:100%!important}
 .thumbs figure{margin:0;aspect-ratio:4/5;border:1px dashed var(--line);border-radius:8px;display:grid;place-items:center;color:var(--muted);font-family:var(--mono);font-size:11px;text-align:center;padding:6px;overflow:hidden}
 .thumbs img{width:100%;height:100%;object-fit:cover;border-radius:7px}
 #panel .cat{margin:16px 0 4px}
@@ -247,8 +253,15 @@ body.night #panel .tag{color:var(--accent)}
 /* ---------- mobile ---------- */
 @media (max-width:640px){
   header{flex-direction:column;padding:18px 18px 0}
+  .brand h1{font-size:34px}
   .hud{flex-direction:row;align-items:center;gap:12px;padding-top:0}
-  main{padding-bottom:150px}
+  main{padding:4px 0 170px}
+  #stage-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;padding:0 12px}
+  #stage{min-width:640px}
+  #room{max-height:none}
+  .swipe{display:block}
+  #bubble{font-size:17px}
+  .mk .dot{stroke-width:2}
   #bubble{left:12px;right:12px;max-width:none;bottom:12px}
   #panel{top:auto;bottom:0;height:min(78vh,720px);width:100%;border-left:0;border-top:3px solid var(--ink);
     transform:translateY(105%);padding:22px 20px 40px}
@@ -271,9 +284,12 @@ body.night #panel .tag{color:var(--accent)}
 </header>
 
 <main>
-  <div id="stage">
-    <svg id="room" viewBox="0 0 760 700" role="img" aria-label="Rofi's rented room, isometric view. Things inside can be clicked."></svg>
+  <div id="stage-wrap">
+    <div id="stage">
+      <svg id="room" viewBox="0 0 760 700" role="img" aria-label="Rofi's rented room, isometric view. Things inside can be clicked."></svg>
+    </div>
   </div>
+  <p class="swipe">swipe sideways to see the whole room · pinch to zoom</p>
 </main>
 
 <div id="bubble" role="status">
@@ -626,6 +642,9 @@ for(const id of [...CLUE_IDS,'pintu']){
   marks+=`<g class="mk" data-id="${id}" transform="translate(${x.toFixed(1)},${y.toFixed(1)})"><rect class="ring" x="-8" y="-8" width="16" height="16"/><rect class="dot" x="-5.5" y="-5.5" width="11" height="11"/><path class="tick" d="M-3.2 0.2l2.2 2.2 4.4-4.6"/></g>`;
 }
 document.getElementById('room').innerHTML=`${defs}<g class="scene">${s}</g><g id="marks">${marks}</g>`;
+/* di HP: pangkas bagian atas dinding yang kosong supaya kamar tampil lebih besar; di laptop: penuh */
+function fitRoom(){const r=document.getElementById('room');const narrow=(window.innerWidth||1000)<=640;r.setAttribute('viewBox',narrow?'40 118 680 580':'0 0 760 700');}
+fitRoom();window.addEventListener('resize',fitRoom);
 
 /* =====================================================================
    4) ISI KARTU PETUNJUK  — ganti teks/tautan/gambar di sini
@@ -655,6 +674,26 @@ const CAT_COL={F:'#B9B4AA',S:'#8C877D',E:'#2E2E33',P:'#D89A8E',D:'#5C5751'};
 const catSvg=(()=>{let r='';CAT_MAP.forEach((row,y)=>{[...row].forEach((ch,x)=>{if(CAT_COL[ch])r+=`<rect x="${x}" y="${y}" width="1" height="1" fill="${CAT_COL[ch]}"/>`;});});
   return `<svg viewBox="0 0 20 20" shape-rendering="crispEdges" aria-hidden="true">${r}</svg>`;})();
 
+/* Tautan postingan Instagram untuk kartu desain. Isi dengan link postingan publik,
+   contoh: 'https://www.instagram.com/p/XXXXXXXXXXX/'. Kosong = kotak placeholder. */
+const IG_POSTS=[
+  'https://www.instagram.com/p/DbtH3LhGMxl/',
+  'https://www.instagram.com/p/DbsqbWjGJFh/',
+  'https://www.instagram.com/p/Dbj-XaDmL8K/',
+  'https://www.instagram.com/p/DZmxL-7GGQV/',
+  'https://www.instagram.com/p/DY9zYgMGPfO/',
+  'https://www.instagram.com/p/DYpRftJGD7z/',
+  'https://www.instagram.com/p/DYXG071GDz9/',
+  'https://www.instagram.com/p/DXqywCLEk7b/',
+  'https://www.instagram.com/p/DW34wLymD07/',
+  'https://www.instagram.com/p/DWyXcHfmLI4/',
+  'https://www.instagram.com/p/DV3Cp7Ckm78/'
+];
+const IG_BATCH=3;   /* berapa preview yang dimuat dulu; sisanya lewat tombol 'show more' */
+const igEmbed=u=>`<blockquote class="instagram-media" data-instgrm-permalink="${u}" data-instgrm-version="14" style="margin:0 0 12px;min-width:0;width:100%"><a href="${u}" target="_blank" rel="noopener">${u}</a></blockquote>`;
+const igEmbeds=()=>{const list=IG_POSTS.filter(Boolean);if(!list.length)return `<figure>Post<br>(add link in IG_POSTS)</figure>`;
+  const rest=list.length-IG_BATCH;
+  return list.slice(0,IG_BATCH).map(igEmbed).join('')+(rest>0?`<button type="button" id="igMore" class="igmore" data-next="${IG_BATCH}">Show ${rest} more</button>`:'');};
 const CLUES={
   laptop:{
     tag:'bug bounty',
@@ -700,11 +739,7 @@ const CLUES={
     html:`
       <p>I'm on the media team of my department's student association and help make its Instagram posts. Visual comms, mostly event posts and info carousels.</p>
       <p>These are my own drafts and layouts, not official statements from anyone.</p>
-      <div class="thumbs">
-        <figure>Post 1<br>(swap image)</figure>
-        <figure>Post 2<br>(swap image)</figure>
-        <figure>Post 3<br>(swap image)</figure>
-      </div>
+      <div class="thumbs${IG_POSTS.some(Boolean)?' ig':''}">${igEmbeds()}</div>
       <ul class="links">
         <li><a href="https://instagram.com/hmteunpad" target="_blank" rel="noopener"><span>HMTE Unpad on Instagram</span><span class="mono">@hmteunpad ↗</span></a></li>
       </ul>`
@@ -773,8 +808,16 @@ function openPanel(id){
       ?'That is it. Thanks for stopping by.'
       :`${left} thing${left>1?'s':''} you have not clicked yet. Door is open either way.`;
   }
+  if(panelBody.querySelector('.instagram-media')){
+    const run=()=>{try{window.instgrm&&window.instgrm.Embeds.process();}catch(e){}};
+    if(window.instgrm){run();}else if(!document.getElementById('igjs')){const sc=document.createElement('script');sc.id='igjs';sc.async=true;sc.src='https://www.instagram.com/embed.js';sc.onload=run;document.body.appendChild(sc);}
+  }
   panel.classList.add('on');backdrop.classList.add('on');panel.setAttribute('aria-hidden','false');
   panel.querySelector('.close').focus();
+  const more=document.getElementById('igMore');
+  if(more)more.addEventListener('click',()=>{const list=IG_POSTS.filter(Boolean);const from=+more.dataset.next,to=Math.min(list.length,from+IG_BATCH);
+    more.insertAdjacentHTML('beforebegin',list.slice(from,to).map(igEmbed).join(''));more.dataset.next=to;const left=list.length-to;
+    if(left>0)more.textContent=`Show ${left} more`;else more.remove();try{window.instgrm&&window.instgrm.Embeds.process();}catch(e){}});
 }
 function closePanel(){panel.classList.remove('on');backdrop.classList.remove('on');panel.setAttribute('aria-hidden','true');}
 document.querySelector('#panel .close').addEventListener('click',closePanel);
@@ -918,6 +961,7 @@ document.querySelector('.mk[data-id="pintu"]').style.opacity=0;
 function idle(){idleT=setTimeout(()=>{if(found.size<4){catHint();salute();}},16000);}
 idle();
 updateHud();
+(function(){const w=document.getElementById('stage-wrap');if(w&&w.scrollWidth>w.clientWidth)w.scrollLeft=(w.scrollWidth-w.clientWidth)/2;})();
 </script>
 </body>
 </html>
